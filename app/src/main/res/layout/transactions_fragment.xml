@@ -216,6 +216,35 @@
                 app:layout_constraintStart_toStartOf="@id/etCategory"
                 app:layout_constraintTop_toBottomOf="@id/etAccount" />
 
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/etNote"
+                app:layout_constraintStart_toStartOf="@id/tvNote"
+                app:layout_constraintEnd_toEndOf="@id/etNote"
+                android:text="@string/note"
+                android:textColor="@color/black"
+                android:layout_marginTop="@dimen/d_20dp">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvSave"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    tools:text="@string/stats"
+                    android:padding="@dimen/d_8dp"
+                    android:gravity="center"
+                    android:background="@drawable/bg_btn_radius_6"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvClear"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:text="@string/account"
+                    android:gravity="center"/>
+
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -231,7 +260,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/d_0_0dp"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="@id/guideline_half">
 
