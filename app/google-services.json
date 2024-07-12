@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "984528066018",
+    "project_id": "financial-planner-76b92",
+    "storage_bucket": "financial-planner-76b92.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984528066018:android:74792da3806aec852a15bb",
+        "android_client_info": {
+          "package_name": "com.example.financialplanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984528066018-1n1phamlihpnhkms1i54of4iumf7rbk7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.financialplanner",
+            "certificate_hash": "8fb93e4d3550bd301a9519c93d062b12c414886b"
+          }
+        },
+        {
+          "client_id": "984528066018-ia3v09b3mplakva3k85kdcib98jpfr60.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQm-QvUZj3hJik-zO92h5FtH6FY-b9xX0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984528066018-ia3v09b3mplakva3k85kdcib98jpfr60.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
