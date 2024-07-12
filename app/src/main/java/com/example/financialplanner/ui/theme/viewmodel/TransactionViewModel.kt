@@ -23,6 +23,9 @@ class TransactionViewModel @Inject constructor(
     private val _categories = MutableLiveData<List<CategoryModel>>()
     val categories = _categories.asLiveData()
 
+    private val _account = MutableLiveData<List<CategoryModel>>()
+    val account = _account.asLiveData()
+
     private val _days = MutableLiveData<List<CalendarModel>>()
     val days = _days.asLiveData()
 
@@ -67,14 +70,14 @@ class TransactionViewModel @Inject constructor(
             val daysInPreviousMonth = previousMonth.lengthOfMonth()
             for (i in 0 until firstDayOfWeek) {
                 val date = previousMonth.atDay(daysInPreviousMonth - firstDayOfWeek + i + 1)
-                days.add(CalendarModel(date, false))
+                days.add(CalendarModel(date, isCurrentMonth = false))
             }
 
             //current month
             for (i in 1..daysInMonth) {
                 val date = yearMonth.atDay(i)
                 val isToday = date.isEqual(today)
-                days.add(CalendarModel(date, true, isToday))
+                days.add(CalendarModel(date, isCurrentMonth = true, isToday))
             }
 
             //next month
@@ -82,9 +85,8 @@ class TransactionViewModel @Inject constructor(
             val daysToAddFromNextMonth = totalDays - days.size
             for (i in 1..daysToAddFromNextMonth) {
                 val date = nextMonth.atDay(i)
-                days.add(CalendarModel(date, false))
+                days.add(CalendarModel(date, isCurrentMonth = false))
             }
-
             _days.value = days
         }
     }
@@ -102,6 +104,7 @@ class TransactionViewModel @Inject constructor(
     fun getTransAccount() {
         viewModelScope.launch {
             val account = getTransAccountUseCase.invoke()
+            _account.value = account
         }
     }
 }

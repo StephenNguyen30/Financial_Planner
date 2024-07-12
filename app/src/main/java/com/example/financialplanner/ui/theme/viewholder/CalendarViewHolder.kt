@@ -1,7 +1,6 @@
 package com.example.financialplanner.ui.theme.viewholder
 
 import android.view.ViewGroup
-import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat.getColor
 import com.example.financialplanner.R
 import com.example.financialplanner.databinding.ItemCalendarBinding
@@ -19,22 +18,17 @@ class CalendarViewHolder(
             binding.tvDate.text = data.dayName
             binding.tvDate.setTextColor(getColor(itemView.context, R.color.black))
         } else {
-            binding.tvDate.text = day?.dayOfMonth.toString()
-            if (data.isCurrentMonth) {
-                binding.tvDate.setTextColor(getColor(itemView.context, R.color.black))
-            } else {
-                binding.tvDate.setTextColor(getColor(itemView.context, R.color.grey))
+            val textColor = when {
+                data.isToday -> getColor(itemView.context, R.color.orange)
+                data.isCurrentMonth -> getColor(itemView.context, R.color.black)
+                else -> getColor(itemView.context, R.color.grey_B3B1B1)
             }
+            binding.tvDate.setTextColor(textColor)
+            binding.tvDate.text = day?.dayOfMonth.toString()
             binding.tvDate.setOnClickListener {
                 dateOnClick.invoke(data)
             }
         }
-
-        val textColor = if (data.isToday) getColor(
-            itemView.context,
-            R.color.orange
-        ) else getColor(itemView.context, R.color.black)
-        binding.tvDate.setTextColor(textColor)
 
     }
 }

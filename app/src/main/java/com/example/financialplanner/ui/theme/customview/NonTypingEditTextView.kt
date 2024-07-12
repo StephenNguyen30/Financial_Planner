@@ -2,7 +2,6 @@ package com.example.financialplanner.ui.theme.customview
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.EditText
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.findFragment
 import com.example.financialplanner.R
@@ -36,8 +35,8 @@ class NonTypingEditTextView(context: Context, attrs: AttributeSet) :
                     }
                     when(id){
                         R.id.etDate -> it.initCalendarRcv()
-                        R.id.etAccount -> it.initRecyclerView()
-                        R.id.etCategory -> it.initRecyclerView()
+                        R.id.etAccount -> it.initCategoryRcv()
+                        R.id.etCategory -> it.initCategoryRcv()
                     }
 
                 } else {

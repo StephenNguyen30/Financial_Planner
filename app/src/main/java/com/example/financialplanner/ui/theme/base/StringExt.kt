@@ -1,11 +1,22 @@
 package com.example.financialplanner.ui.theme.base
 
-import android.widget.EditText
-import java.util.Locale
 
 fun String.formatAmount(): String {
-    if (this.contains("  đ")) return this
-    return this.plus("  đ")
+    if (this.isEmpty()) return ""
+
+    val parts = this.split(" ")
+    val amount = parts[0].replace(".", "")
+
+    val formattedAmount = StringBuilder()
+    val reversedAmount = amount.reversed()
+    for (i in reversedAmount.indices) {
+        formattedAmount.append(reversedAmount[i])
+        if ((i + 1) % 3 == 0 && (i + 1) < reversedAmount.length) {
+            formattedAmount.append(".")
+        }
+    }
+
+    return formattedAmount.reverse().toString() + "  đ"
 }
 
 fun String.emptyString(): String {
@@ -13,15 +24,5 @@ fun String.emptyString(): String {
 }
 
 
-fun String.formatDecimal(): String {
-    val cleanInput = this.replace(",", "").replace(".", "")
-
-    val formattedAmount = StringBuilder(cleanInput)
-    for (i in formattedAmount.length - 3 downTo 1 step 3) {
-        formattedAmount.insert(i, ".")
-    }
-    return formattedAmount.toString()
-}
-
 fun String.titleCase(): String =
-    this.lowercase().replaceFirstChar {it.uppercase() }
+    this.lowercase().replaceFirstChar { it.uppercase() }

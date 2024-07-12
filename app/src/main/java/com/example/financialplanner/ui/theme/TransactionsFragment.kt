@@ -3,7 +3,6 @@ package com.example.financialplanner.ui.theme
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.widget.CalendarView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -14,12 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.financialplanner.R
 import com.example.financialplanner.databinding.TransactionsFragmentBinding
 import com.example.financialplanner.ui.theme.adapter.CalendarAdapter
-import com.example.financialplanner.ui.theme.adapter.TransactionInfoAdapter
+import com.example.financialplanner.ui.theme.adapter.CategoryAdapter
 import com.example.financialplanner.ui.theme.base.BaseFragment
 import com.example.financialplanner.ui.theme.base.GridItemDecoration
 import com.example.financialplanner.ui.theme.base.setTextEditView
 import com.example.financialplanner.ui.theme.base.titleCase
-import com.example.financialplanner.ui.theme.viewholder.CalendarViewHolder
 import com.example.financialplanner.ui.theme.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -40,21 +38,25 @@ class TransactionsFragment :
     private val cal = Calendar.getInstance(timeZone, Locale.ENGLISH)
     private var formatters: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
 
-    private val transactionAdapter: TransactionInfoAdapter by lazy {
-        TransactionInfoAdapter(
+    private val transactionAdapter: CategoryAdapter by lazy {
+        CategoryAdapter(
             categoryOnClick = {
-                val drawable = ContextCompat.getDrawable(requireContext(), it.icon)
-                binding.etCategory.setCompoundDrawablesWithIntrinsicBounds(
-                    drawable,
-                    null,
-                    null,
-                    null
-                )
-                binding.etCategory.setTextEditView(" ${it.name}")
-//                binding.etCategory.isLongClickable = false
-                bindingPopUp(false)
+                if (binding.etCategory.isFocused) {
+                    val drawable = ContextCompat.getDrawable(requireContext(), it.icon)
+                    binding.etCategory.setCompoundDrawablesWithIntrinsicBounds(
+                        drawable,
+                        null,
+                        null,
+                        null
+                    )
+                    binding.etCategory.setTextEditView(" ${it.name}")
+                    bindingPopUp(false)
+                }
+                if (binding.etAccount.isFocused){
+                    binding.etAccount.setTextEditView(" ${it.name}")
+                    bindingPopUp(false)
+                }
             }
-
         )
     }
 
@@ -86,11 +88,16 @@ class TransactionsFragment :
         viewModel.categories.observe(viewLifecycleOwner) {
             if (it.isEmpty()) return@observe
             viewModel.getTransCategory()
-            transactionAdapter.submitList(it)
+            if (binding.etCategory.isFocused) transactionAdapter.submitList(it)
         }
         viewModel.days.observe(viewLifecycleOwner) {
             if (it.isEmpty()) return@observe
             calendarAdapter.submitList(it)
+        }
+        viewModel.account.observe(viewLifecycleOwner) {
+            if (it.isEmpty()) return@observe
+            viewModel.getTransAccount()
+            if (binding.etAccount.isFocused) transactionAdapter.submitList(it)
         }
         val currentMonth = YearMonth.now()
         viewModel.yearMonth.observe(viewLifecycleOwner) {
@@ -146,7 +153,7 @@ class TransactionsFragment :
 
     }
 
-    fun initRecyclerView() {
+    fun initCategoryRcv() {
         binding.rcvCategory.layoutManager =
             GridLayoutManager(context, 3, LinearLayoutManager.VERTICAL, false)
         binding.rcvCategory.adapter = transactionAdapter
