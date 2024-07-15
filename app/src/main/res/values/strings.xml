@@ -24,5 +24,7 @@
     <string name="transfer">Transfer</string>
     <string name="transactions">Transactions</string>
     <string name="title">Title</string>
+    <string name="clear">Clear</string>
+    <string name="save">Save</string>
 
 </resources>
