@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,6 +17,7 @@ import com.example.financialplanner.ui.theme.adapter.CalendarAdapter
 import com.example.financialplanner.ui.theme.adapter.CategoryAdapter
 import com.example.financialplanner.ui.theme.base.BaseFragment
 import com.example.financialplanner.ui.theme.base.GridItemDecoration
+import com.example.financialplanner.ui.theme.base.hideKeyboard
 import com.example.financialplanner.ui.theme.base.setTextEditView
 import com.example.financialplanner.ui.theme.base.titleCase
 import com.example.financialplanner.ui.theme.viewmodel.TransactionViewModel
@@ -52,7 +54,7 @@ class TransactionsFragment :
                     binding.etCategory.setTextEditView(" ${it.name}")
                     bindingPopUp(false)
                 }
-                if (binding.etAccount.isFocused){
+                if (binding.etAccount.isFocused) {
                     binding.etAccount.setTextEditView(" ${it.name}")
                     bindingPopUp(false)
                 }
@@ -149,6 +151,35 @@ class TransactionsFragment :
         }
         binding.ivRightArrow.setOnClickListener {
             viewModel.moveToNextMonth()
+        }
+        val listEditText = listOf(
+            binding.etDate,
+            binding.etCategory,
+            binding.etAccount,
+            binding.etAmount,
+            binding.etNote
+        )
+        binding.nsv.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+            if (scrollY != oldScrollY || !binding.nsv.canScrollVertically(1) || !binding.nsv.canScrollVertically(
+                    0
+                )
+            ) {
+                bindingPopUp(false)
+                context?.hideKeyboard(this.requireView())
+                listEditText.forEach {
+                    it.clearFocus()
+                }
+            }
+        })
+        binding.tvClear.setOnClickListener {
+            binding.etCategory.setTextEditView("")
+            binding.etAccount.setTextEditView("")
+            binding.etAmount.setTextEditView("")
+            binding.etNote.setTextEditView("")
+            binding.etCategory.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        }
+        binding.tvSave.setOnClickListener {
+
         }
 
     }

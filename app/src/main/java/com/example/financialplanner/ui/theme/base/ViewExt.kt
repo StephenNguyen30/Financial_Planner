@@ -107,4 +107,3 @@ fun EditText.setTextEditView(string: String) {
     this.clearFocus()
 }
 
-
