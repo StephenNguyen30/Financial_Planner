@@ -8,6 +8,7 @@ import com.example.financialplanner.ui.theme.model.CalendarModel
 import com.example.financialplanner.ui.theme.model.CategoryModel
 import com.example.financialplanner.ui.theme.usecases.GetTransAccountUseCase
 import com.example.financialplanner.ui.theme.usecases.GetTransCategoriesUseCase
+import com.example.financialplanner.ui.theme.usecases.GetTransIncomeCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
     private val getTransCategoriesUseCase: GetTransCategoriesUseCase,
-    private val getTransAccountUseCase: GetTransAccountUseCase
+    private val getTransAccountUseCase: GetTransAccountUseCase,
+    private val getTransIncomeCategory: GetTransIncomeCategoryUseCase
 ) : BaseViewModel() {
     private val _categories = MutableLiveData<List<CategoryModel>>()
     val categories = _categories.asLiveData()
@@ -32,9 +34,13 @@ class TransactionViewModel @Inject constructor(
     private val _yearMonth = MutableLiveData(YearMonth.now())
     val yearMonth = _yearMonth.asLiveData()
 
+    private val _incomeCategories = MutableLiveData<List<CategoryModel>>()
+    val incomeCategories = _incomeCategories.asLiveData()
+
     init {
         getTransCategory()
         getTransAccount()
+        getIncomeCategory()
     }
 
     private fun updateCalendar() {
@@ -88,6 +94,13 @@ class TransactionViewModel @Inject constructor(
                 days.add(CalendarModel(date, isCurrentMonth = false))
             }
             _days.value = days
+        }
+    }
+
+    fun getIncomeCategory(){
+        viewModelScope.launch {
+            val incomeCategories = getTransIncomeCategory.invoke()
+            _incomeCategories.value = incomeCategories
         }
     }
 

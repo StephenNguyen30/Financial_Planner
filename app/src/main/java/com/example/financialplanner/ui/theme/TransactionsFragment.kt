@@ -3,6 +3,7 @@ package com.example.financialplanner.ui.theme
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
@@ -20,12 +21,14 @@ import com.example.financialplanner.ui.theme.base.GridItemDecoration
 import com.example.financialplanner.ui.theme.base.hideKeyboard
 import com.example.financialplanner.ui.theme.base.setTextEditView
 import com.example.financialplanner.ui.theme.base.titleCase
+import com.example.financialplanner.ui.theme.model.CategoryModel
 import com.example.financialplanner.ui.theme.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.ConcurrentModificationException
 import java.util.Locale
 import java.util.TimeZone
 
@@ -39,6 +42,8 @@ class TransactionsFragment :
     private val sdf = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
     private val cal = Calendar.getInstance(timeZone, Locale.ENGLISH)
     private var formatters: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+
+    private var originalList = emptyList<CategoryModel>()
 
     private val transactionAdapter: CategoryAdapter by lazy {
         CategoryAdapter(
@@ -89,8 +94,18 @@ class TransactionsFragment :
     private fun initObserver() {
         viewModel.categories.observe(viewLifecycleOwner) {
             if (it.isEmpty()) return@observe
+            originalList = it
             viewModel.getTransCategory()
-            if (binding.etCategory.isFocused) transactionAdapter.submitList(it)
+            if (binding.etCategory.isFocused && binding.rbExpenses.isChecked) transactionAdapter.submitList(
+                it
+            )
+        }
+        viewModel.incomeCategories.observe(viewLifecycleOwner) {
+            if (it.isEmpty()) return@observe
+            viewModel.getIncomeCategory()
+            if (binding.etCategory.isFocused && binding.rbIncome.isChecked) transactionAdapter.submitList(
+                it
+            )
         }
         viewModel.days.observe(viewLifecycleOwner) {
             if (it.isEmpty()) return@observe
@@ -134,14 +149,37 @@ class TransactionsFragment :
             when (checkedId) {
                 R.id.rbIncome -> {
                     binding.appBar.tvTitle.text = getString(R.string.income)
+                    binding.tvSave.setBackgroundDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.bg_btn_radius_red_12
+                        )
+                    )
+                    transactionAdapter.submitList(viewModel.incomeCategories.value)
+                    clearData()
                 }
 
                 R.id.rbExpenses -> {
                     binding.appBar.tvTitle.text = getString(R.string.expenses)
+                    binding.tvSave.setBackgroundDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.bg_btn_radius_green_12
+                        )
+                    )
+                    transactionAdapter.submitList(originalList)
+                    clearData()
                 }
 
                 R.id.rbTransfer -> {
                     binding.appBar.tvTitle.text = getString(R.string.transfer)
+                    binding.tvSave.setBackgroundDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.bg_btn_radius_black_12
+                        )
+                    )
+                    clearData()
                 }
 
             }
@@ -172,11 +210,7 @@ class TransactionsFragment :
             }
         })
         binding.tvClear.setOnClickListener {
-            binding.etCategory.setTextEditView("")
-            binding.etAccount.setTextEditView("")
-            binding.etAmount.setTextEditView("")
-            binding.etNote.setTextEditView("")
-            binding.etCategory.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+            clearData()
         }
         binding.tvSave.setOnClickListener {
 
@@ -189,7 +223,12 @@ class TransactionsFragment :
             GridLayoutManager(context, 3, LinearLayoutManager.VERTICAL, false)
         binding.rcvCategory.adapter = transactionAdapter
         clearItemDecorations(binding.rcvCategory)
-        binding.rcvCategory.addItemDecoration(GridItemDecoration(3, Color.GRAY))
+        binding.rcvCategory.addItemDecoration(
+            GridItemDecoration(
+                3,
+                ContextCompat.getColor(requireContext(), R.color.grey_B3B1B1)
+            )
+        )
         binding.llCalendarMonth.isVisible = false
     }
 
@@ -199,13 +238,19 @@ class TransactionsFragment :
             GridLayoutManager(context, 7, LinearLayoutManager.VERTICAL, false)
         binding.rcvCategory.adapter = calendarAdapter
         clearItemDecorations(binding.rcvCategory)
-        binding.rcvCategory.addItemDecoration(GridItemDecoration(3, Color.GRAY))
+        binding.rcvCategory.addItemDecoration(
+            GridItemDecoration(
+                3,
+                ContextCompat.getColor(requireContext(), R.color.grey_B3B1B1)
+            )
+        )
         binding.rcvCategory.setOnTouchListener { _, _ -> true }
         binding.llCalendarMonth.isVisible = true
     }
 
     fun bindingPopUp(boolean: Boolean) {
         binding.llPopUp.isVisible = boolean
+        binding.llSelection.isVisible = !boolean
     }
 
     fun setTitlePopUpName(string: String) {
@@ -216,5 +261,16 @@ class TransactionsFragment :
         while (recyclerView.itemDecorationCount > 0) {
             recyclerView.removeItemDecorationAt(0)
         }
+    }
+
+    private fun clearData() {
+        binding.etCategory.setTextEditView("")
+        binding.etAccount.setTextEditView("")
+        binding.etAmount.setTextEditView("")
+        binding.etNote.setTextEditView("")
+        binding.etCategory.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        bindingPopUp(false)
+        context?.hideKeyboard(this.requireView())
+        binding.etDate.setText(sdf.format(cal.time))
     }
 }

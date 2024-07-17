@@ -22,6 +22,7 @@ data class TransactionModel(
 data class CategoryModel(
     val name: String,
     val icon: Int,
+    val isCategory: Boolean
 ) : Parcelable{
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CategoryModel>() {

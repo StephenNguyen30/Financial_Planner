@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
@@ -31,22 +32,16 @@ import java.util.TimeZone
 class HomeActivity : BaseActivity<HomeActivityBinding>(HomeActivityBinding::inflate) {
     override val viewModel: HomeViewModel by viewModels()
 
-    private val userViewModel: AuthViewModel by viewModels()
-
     private lateinit var navController: NavController
 
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        if (userViewModel.userLiveData.value?.id?.isNotEmpty() == false) {
-            navController.navigate(R.id.homeFragment)
-        } else {
-//
-        }
         initNavHost()
-        initListener()
+        initUi()
+        initObservers()
     }
 
-    private fun initListener() {
-        initTopAppBar()
+    private fun initUi() {
         initBottomBar()
     }
 
@@ -56,11 +51,22 @@ class HomeActivity : BaseActivity<HomeActivityBinding>(HomeActivityBinding::infl
         navController = navHostFragment.navController
     }
 
-    private fun initTopAppBar() {
-        val avaItem = binding.layoutTopAppBar.topAppBar.menu.findItem(R.id.itemAva)
-        avaItem.isVisible = userViewModel.userLiveData.value?.id?.isNotEmpty() ?: false
+    private fun initObservers() {
+        viewModel.userLiveData.observe(this) {
+            if (it.id.isNotEmpty()) {
+                navController.navigate(R.id.homeFragment)
+            }
+            initTopAppBar(it.id.isNotEmpty())
+        }
 
-        val avatarUrl = userViewModel.userLiveData.value?.imageUrl ?: R.drawable.ic_def_player
+    }
+
+    private fun initTopAppBar(isLogged: Boolean = false) {
+        val avaItem = binding.layoutTopAppBar.topAppBar.menu.findItem(R.id.itemAva)
+        avaItem.isVisible = isLogged
+        Log.d("KKK retrieve data to Home", "${viewModel.userLiveData.value?.id}")
+
+        val avatarUrl = viewModel.userLiveData.value?.imageUrl ?: R.drawable.ic_def_player
         val borderDrawable = ContextCompat.getDrawable(this, R.drawable.bg_border_avatar)
         Glide.with(this)
             .asBitmap()
@@ -120,7 +126,7 @@ class HomeActivity : BaseActivity<HomeActivityBinding>(HomeActivityBinding::infl
     }
 
 
-    fun showTopAppBar(isShow: Boolean, title: String = "", showLogo: Boolean = true) {
+    fun showTopAppBar(isShow: Boolean, title: String = "") {
         binding.layoutTopAppBar.appBar.isVisible = isShow
         binding.layoutTopAppBar.topAppBar.title = ""
         binding.layoutTopAppBar.tvTitle.text = title
@@ -131,7 +137,8 @@ class HomeActivity : BaseActivity<HomeActivityBinding>(HomeActivityBinding::infl
         if (event.action == MotionEvent.ACTION_DOWN) {
             val view = currentFocus
             if (view != null) {
-                val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val inputMethodManager =
+                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
             }
         }

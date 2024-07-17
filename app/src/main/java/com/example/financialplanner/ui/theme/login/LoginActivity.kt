@@ -47,7 +47,9 @@ class LoginActivity : BaseActivity<LoginFragmentBinding>(LoginFragmentBinding::i
             if(isNotEmpty){
                 val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                 startActivity(intent)
+                finish()
             }
+            Log.d("KKK retrieve data", "$it")
         }
     }
 
