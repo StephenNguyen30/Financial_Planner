@@ -68,9 +68,9 @@ dependencies {
     implementation("com.google.firebase:firebase-database-ktx:21.0.0")
 
     //viewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.3")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
     implementation("androidx.core:core-ktx:1.13.1")
 
     //timber
@@ -92,8 +92,8 @@ dependencies {
     implementation ("com.google.android.gms:play-services-auth:21.2.0")
 
     //hilt injection
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
 
     //room database
     implementation("androidx.room:room-runtime:2.6.1")
@@ -105,6 +105,6 @@ dependencies {
 
     //datastore
     implementation ("androidx.datastore:datastore-preferences:1.1.1")
-    implementation ("com.google.code.gson:gson:2.8.9")
+    implementation ("com.google.code.gson:gson:2.9.0")
 
 }
