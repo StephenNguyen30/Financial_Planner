@@ -1,12 +1,11 @@
 package com.example.financialplanner.ui.theme
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -28,7 +27,6 @@ import java.text.SimpleDateFormat
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.ConcurrentModificationException
 import java.util.Locale
 import java.util.TimeZone
 
@@ -36,7 +34,7 @@ import java.util.TimeZone
 @AndroidEntryPoint
 class TransactionsFragment :
     BaseFragment<TransactionsFragmentBinding>(TransactionsFragmentBinding::inflate) {
-    override val viewModel: TransactionViewModel by viewModels()
+    override val viewModel: TransactionViewModel by activityViewModels()
 
     private val timeZone = TimeZone.getDefault()
     private val sdf = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
@@ -48,7 +46,7 @@ class TransactionsFragment :
     private val transactionAdapter: CategoryAdapter by lazy {
         CategoryAdapter(
             categoryOnClick = {
-                if (binding.etCategory.isFocused) {
+                if (binding.etCategory.isFocused && it.name != "Add Categories") {
                     val drawable = ContextCompat.getDrawable(requireContext(), it.icon)
                     binding.etCategory.setCompoundDrawablesWithIntrinsicBounds(
                         drawable,
@@ -59,11 +57,14 @@ class TransactionsFragment :
                     binding.etCategory.setTextEditView(" ${it.name}")
                     bindingPopUp(false)
                 }
-                if (binding.etAccount.isFocused) {
+                if (binding.etAccount.isFocused && it.name != "Add Accounts") {
                     binding.etAccount.setTextEditView(" ${it.name}")
                     bindingPopUp(false)
                 }
-            }
+                if (it.name == "Add Categories" || it.name == "Add Accounts") {
+                    findNavController().navigate(R.id.action_transactionFragment_to_addCategoryFragment)
+                }
+            },
         )
     }
 
@@ -80,7 +81,6 @@ class TransactionsFragment :
         initUI()
         initObserver()
         initListener()
-
     }
 
     private fun initUI() {
@@ -96,27 +96,30 @@ class TransactionsFragment :
             if (it.isEmpty()) return@observe
             originalList = it
             viewModel.getTransCategory()
-            if (binding.etCategory.isFocused && binding.rbExpenses.isChecked) transactionAdapter.submitList(
-                it
-            )
+            if (binding.etCategory.isFocused && binding.rbExpenses.isChecked)
+                transactionAdapter.submitList(it)
         }
+
         viewModel.incomeCategories.observe(viewLifecycleOwner) {
             if (it.isEmpty()) return@observe
             viewModel.getIncomeCategory()
-            if (binding.etCategory.isFocused && binding.rbIncome.isChecked) transactionAdapter.submitList(
-                it
-            )
+            if (binding.etCategory.isFocused && binding.rbIncome.isChecked)
+                transactionAdapter.submitList(it)
         }
+
         viewModel.days.observe(viewLifecycleOwner) {
             if (it.isEmpty()) return@observe
             calendarAdapter.submitList(it)
         }
+
         viewModel.account.observe(viewLifecycleOwner) {
             if (it.isEmpty()) return@observe
             viewModel.getTransAccount()
             if (binding.etAccount.isFocused) transactionAdapter.submitList(it)
         }
+
         val currentMonth = YearMonth.now()
+
         viewModel.yearMonth.observe(viewLifecycleOwner) {
             viewModel.getTransCalendar(currentMonth)
             if (it == currentMonth) {

@@ -4,8 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.financialplanner.ui.theme.base.BaseViewModel
 import com.example.financialplanner.ui.theme.base.asLiveData
+import com.example.financialplanner.ui.theme.datastore.DataStorePreference
 import com.example.financialplanner.ui.theme.model.CalendarModel
 import com.example.financialplanner.ui.theme.model.CategoryModel
+import com.example.financialplanner.ui.theme.model.UserModel
 import com.example.financialplanner.ui.theme.usecases.GetTransAccountUseCase
 import com.example.financialplanner.ui.theme.usecases.GetTransCategoriesUseCase
 import com.example.financialplanner.ui.theme.usecases.GetTransIncomeCategoryUseCase
@@ -20,7 +22,7 @@ import javax.inject.Inject
 class TransactionViewModel @Inject constructor(
     private val getTransCategoriesUseCase: GetTransCategoriesUseCase,
     private val getTransAccountUseCase: GetTransAccountUseCase,
-    private val getTransIncomeCategory: GetTransIncomeCategoryUseCase
+    private val getTransIncomeCategory: GetTransIncomeCategoryUseCase,
 ) : BaseViewModel() {
     private val _categories = MutableLiveData<List<CategoryModel>>()
     val categories = _categories.asLiveData()
@@ -37,6 +39,7 @@ class TransactionViewModel @Inject constructor(
     private val _incomeCategories = MutableLiveData<List<CategoryModel>>()
     val incomeCategories = _incomeCategories.asLiveData()
 
+
     init {
         getTransCategory()
         getTransAccount()
@@ -45,6 +48,15 @@ class TransactionViewModel @Inject constructor(
 
     private fun updateCalendar() {
         getTransCalendar(_yearMonth.value!!)
+    }
+
+    fun addCategory(category: CategoryModel) {
+        viewModelScope.launch {
+            val updatedCategories = _categories.value.orEmpty().toMutableList().apply {
+                add(category)
+            }
+            _categories.value = updatedCategories
+        }
     }
 
     fun getTransCategory() {
@@ -97,7 +109,7 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
-    fun getIncomeCategory(){
+    fun getIncomeCategory() {
         viewModelScope.launch {
             val incomeCategories = getTransIncomeCategory.invoke()
             _incomeCategories.value = incomeCategories

@@ -9,7 +9,7 @@ import com.example.financialplanner.ui.theme.viewholder.CategoryViewHolder
 
 
 class CategoryAdapter(
-    private val categoryOnClick: (CategoryModel) -> Unit = {}
+    private val categoryOnClick: (CategoryModel) -> Unit = {},
 ) : BaseBindingAdapter<CategoryModel>(CategoryModel.DIFF_CALLBACK) {
     override fun contentViewHolder(
         parent: ViewGroup,

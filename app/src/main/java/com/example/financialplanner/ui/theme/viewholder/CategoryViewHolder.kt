@@ -1,11 +1,6 @@
 package com.example.financialplanner.ui.theme.viewholder
 
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
-import androidx.core.view.setMargins
 import androidx.core.view.updateLayoutParams
 import com.example.financialplanner.R
 import com.example.financialplanner.databinding.ItemTransactionInfoBinding
@@ -15,7 +10,7 @@ import com.example.financialplanner.ui.theme.model.CategoryModel
 
 class CategoryViewHolder(
     parent: ViewGroup,
-    private val categoryOnClick: (CategoryModel) -> Unit = {}
+    private val categoryOnClick: (CategoryModel) -> Unit = {},
 ) : BaseBindingViewHolder<CategoryModel, ItemTransactionInfoBinding>(parent get ItemTransactionInfoBinding::inflate) {
     override fun bind(data: CategoryModel) {
         binding.tvCategories.text = data.name
@@ -32,12 +27,8 @@ class CategoryViewHolder(
             view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 marginStart = itemView.context.resources.getDimensionPixelSize(R.dimen.d_22dp)
             }
-            if (binding.tvCategories.text == "+") {
-                view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    marginStart = itemView.context.resources.getDimensionPixelSize(R.dimen.d_22dp)
-                }
-            }
         }
+
 
     }
 }

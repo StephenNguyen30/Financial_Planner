@@ -2,7 +2,6 @@ package com.example.financialplanner.ui.theme.datastore
 
 
 import android.util.Log
-import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -10,10 +9,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.financialplanner.ui.theme.datastore.PreferenceKeys.USER_MODEL_KEY
 import com.example.financialplanner.ui.theme.model.UserModel
 import com.google.gson.Gson
-import io.sentry.protocol.User
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class DataStoreImpl @Inject constructor(
@@ -28,8 +25,7 @@ class DataStoreImpl @Inject constructor(
             dataStore.edit { preference ->
                 preference[USER_MODEL_KEY] = userModelJson
             }
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             Log.e("Exception", "$e")
         }
 
@@ -37,14 +33,26 @@ class DataStoreImpl @Inject constructor(
 
     //reading data
     override suspend fun getUser(): Flow<UserModel> {
-        val userFlow: Flow<UserModel> = flow {
+//        val userFlow: Flow<UserModel> = flow {
+//            if()
+//            dataStore.data.collect { preference ->
+//                val user = preference[USER_MODEL_KEY] ?: ""
+//                val decode = gson.fromJson(user, UserModel::class.java)
+//                emit(decode)
+//            }
+//        }
+//        return userFlow
+        return flow {
             dataStore.data.collect { preference ->
-                val user = preference[USER_MODEL_KEY] ?: ""
-                val decode = gson.fromJson(user, UserModel::class.java)
-                emit(decode)
+                val userJson = preference[USER_MODEL_KEY]
+                if (!userJson.isNullOrEmpty()) {
+                    val decode = gson.fromJson(userJson, UserModel::class.java)
+                    emit(decode)
+                } else {
+                    emit(UserModel(""))
+                }
             }
         }
-        return userFlow
     }
 
     //delete existing user

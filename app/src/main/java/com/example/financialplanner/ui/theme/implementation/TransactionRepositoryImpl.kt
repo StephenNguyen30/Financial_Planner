@@ -18,7 +18,7 @@ class TransactionRepositoryImpl @Inject constructor(): TransactionRepository {
             CategoryModel("Pets", R.drawable.ic_pets, true),
             CategoryModel("Health care", R.drawable.ic_health_care, true),
             CategoryModel("Household", R.drawable.ic_household,true),
-            CategoryModel("+", 0, false)
+            CategoryModel("Add Categories", 0 , false)
         )
     }
 
@@ -27,7 +27,7 @@ class TransactionRepositoryImpl @Inject constructor(): TransactionRepository {
             CategoryModel("Cash", 0, false),
             CategoryModel("Card", 0, false),
             CategoryModel("Bank", 0, false),
-            CategoryModel("Add", 0, false)
+            CategoryModel("Add Accounts", 0, false)
         )
     }
 
@@ -39,7 +39,7 @@ class TransactionRepositoryImpl @Inject constructor(): TransactionRepository {
             CategoryModel("Investment", R.drawable.ic_investment, true),
             CategoryModel("Bonus", R.drawable.ic_bonus,true),
             CategoryModel("Allowance", R.drawable.ic_allowance,true),
-            CategoryModel("Add", 0, false)
+            CategoryModel("Add Categories", 0, false)
         )
     }
 }

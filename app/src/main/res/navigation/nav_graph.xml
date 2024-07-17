@@ -19,8 +19,22 @@
         android:id="@+id/transactionFragment"
         android:name="com.example.financialplanner.ui.theme.TransactionsFragment"
         android:label="TransactionFragment">
+        <action
+            android:id="@+id/action_transactionFragment_to_addCategoryFragment"
+            app:destination="@+id/addCategoryFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right"/>
 
     </fragment>
+    <fragment
+        android:id="@+id/addCategoryFragment"
+        android:name="com.example.financialplanner.ui.theme.AddCategoryFragment"
+        android:label="AddCategoryFragment">
+
+    </fragment>
+
     <fragment
         android:id="@+id/statsFragment"
         android:name="com.example.financialplanner.ui.theme.StatsFragment"
