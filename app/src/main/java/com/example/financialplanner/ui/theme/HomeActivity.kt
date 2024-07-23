@@ -22,6 +22,9 @@ import com.example.financialplanner.databinding.HomeActivityBinding
 import com.example.financialplanner.ui.theme.base.BaseActivity
 import com.example.financialplanner.ui.theme.login.AuthViewModel
 import com.example.financialplanner.ui.theme.viewmodel.HomeViewModel
+import com.example.financialplanner.ui.theme.viewmodel.TransactionViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -33,7 +36,6 @@ class HomeActivity : BaseActivity<HomeActivityBinding>(HomeActivityBinding::infl
     override val viewModel: HomeViewModel by viewModels()
 
     private lateinit var navController: NavController
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         initNavHost()

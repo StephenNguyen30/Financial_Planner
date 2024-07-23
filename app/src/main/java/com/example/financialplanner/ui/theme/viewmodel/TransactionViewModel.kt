@@ -1,5 +1,6 @@
 package com.example.financialplanner.ui.theme.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.financialplanner.ui.theme.base.BaseViewModel
@@ -7,11 +8,14 @@ import com.example.financialplanner.ui.theme.base.asLiveData
 import com.example.financialplanner.ui.theme.datastore.DataStorePreference
 import com.example.financialplanner.ui.theme.model.CalendarModel
 import com.example.financialplanner.ui.theme.model.CategoryModel
+import com.example.financialplanner.ui.theme.model.TransactionModel
 import com.example.financialplanner.ui.theme.model.UserModel
+import com.example.financialplanner.ui.theme.respository.FirebaseRepository
 import com.example.financialplanner.ui.theme.usecases.GetTransAccountUseCase
 import com.example.financialplanner.ui.theme.usecases.GetTransCategoriesUseCase
 import com.example.financialplanner.ui.theme.usecases.GetTransIncomeCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.Year
@@ -20,12 +24,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
-    private val getTransCategoriesUseCase: GetTransCategoriesUseCase,
     private val getTransAccountUseCase: GetTransAccountUseCase,
     private val getTransIncomeCategory: GetTransIncomeCategoryUseCase,
+    private val firebase: FirebaseRepository,
+    private val dataStore: DataStorePreference
 ) : BaseViewModel() {
-    private val _categories = MutableLiveData<List<CategoryModel>>()
-    val categories = _categories.asLiveData()
 
     private val _account = MutableLiveData<List<CategoryModel>>()
     val account = _account.asLiveData()
@@ -39,31 +42,23 @@ class TransactionViewModel @Inject constructor(
     private val _incomeCategories = MutableLiveData<List<CategoryModel>>()
     val incomeCategories = _incomeCategories.asLiveData()
 
+    var userId: String = ""
+
+    var selectedCategory: CategoryModel? = null
+
 
     init {
-        getTransCategory()
+        viewModelScope.launch {
+            dataStore.getUser().collect {
+                userId = it.id
+            }
+        }
         getTransAccount()
         getIncomeCategory()
     }
 
     private fun updateCalendar() {
         getTransCalendar(_yearMonth.value!!)
-    }
-
-    fun addCategory(category: CategoryModel) {
-        viewModelScope.launch {
-            val updatedCategories = _categories.value.orEmpty().toMutableList().apply {
-                add(category)
-            }
-            _categories.value = updatedCategories
-        }
-    }
-
-    fun getTransCategory() {
-        viewModelScope.launch {
-            val categories = getTransCategoriesUseCase.invoke()
-            _categories.value = categories
-        }
     }
 
     fun getTransCalendar(yearMonth: YearMonth) {
@@ -132,4 +127,15 @@ class TransactionViewModel @Inject constructor(
             _account.value = account
         }
     }
+
+    fun addTransaction(userId: String, transaction: TransactionModel) {
+        viewModelScope.launch {
+            try {
+                firebase.addTransaction(userId, transaction)
+            } catch (e: Exception) {
+                Log.e("Exception", "Unable to save transactions")
+            }
+        }
+    }
+
 }

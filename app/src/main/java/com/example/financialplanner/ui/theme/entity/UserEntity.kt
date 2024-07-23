@@ -8,7 +8,6 @@ import com.example.financialplanner.ui.theme.entity.UserEntity.Companion.USERS
 @Entity(tableName = USERS)
 data class UserEntity(
     @PrimaryKey val id: String,
-    val displayName: String?,
     val firstName: String?,
     val familyName: String?,
     val phoneNumber: String?,

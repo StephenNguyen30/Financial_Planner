@@ -11,35 +11,37 @@ import com.example.financialplanner.databinding.AddCategoryFragmentBinding
 import com.example.financialplanner.ui.theme.base.BaseFragment
 import com.example.financialplanner.ui.theme.base.BaseViewModel
 import com.example.financialplanner.ui.theme.model.CategoryModel
-import com.example.financialplanner.ui.theme.viewmodel.TransactionViewModel
+import com.example.financialplanner.ui.theme.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddCategoryFragment : BaseFragment<AddCategoryFragmentBinding>(AddCategoryFragmentBinding::inflate) {
-    override val viewModel: TransactionViewModel by activityViewModels()
+class AddCategoryFragment :
+    BaseFragment<AddCategoryFragmentBinding>(AddCategoryFragmentBinding::inflate) {
+
+    override val viewModel: BaseViewModel by viewModels()
+    private val parentVM : HomeViewModel by activityViewModels()
 
     override fun onFragmentCreated(savedInstanceState: Bundle?) {
         initUi()
         initListener()
     }
-    private fun initUi(){
-        (activity as HomeActivity).showTopAppBar(false,"")
+
+    private fun initUi() {
+        (activity as HomeActivity).showTopAppBar(false, "")
         binding.addAppBar.tvTitle.text = getString(R.string.add)
     }
 
-    private fun initListener(){
-        binding.addAppBar.ivBack.setOnClickListener{
+    private fun initListener() {
+        binding.addAppBar.ivBack.setOnClickListener {
             findNavController().popBackStack()
         }
 
-        binding.tvSave.setOnClickListener{
+        binding.tvSave.setOnClickListener {
             val editText = binding.etName.text ?: ""
-            if(editText.isEmpty()) {
+            if (editText.isEmpty()) {
                 Toast.makeText(activity, "Enter name to add", Toast.LENGTH_SHORT).show()
-            }
-            else{
+            } else {
                 val newCategory = CategoryModel(binding.etName.text.toString(), 0, false)
-                viewModel.addCategory(newCategory)
                 Log.d("KKK button on click", "Clicked successfully")
                 findNavController().popBackStack()
             }

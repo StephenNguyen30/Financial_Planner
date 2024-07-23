@@ -11,11 +11,12 @@ import java.util.Date
 
 @Parcelize
 data class TransactionModel(
-    val dayDate: Date,
-    val category: CategoryModel,
-    val income: Long = 0,
-    val expenses: Long = 0,
-    val note: String = ""
+    val dayDate: String,
+    val categories: CategoryModel,
+    val amount: String,
+    val accounts: CategoryModel,
+    val note: String = "",
+    val isExpenses: Boolean = true
 ) : Parcelable
 
 @Parcelize

@@ -214,7 +214,7 @@
                 android:layout_marginEnd="@dimen/d_16dp"
                 android:backgroundTint="@color/grey"
                 android:hint="@string/stats"
-                android:inputType="textCapWords"
+                android:inputType="textCapSentences"
                 android:minHeight="@dimen/d_48dp"
                 android:textColor="@color/black"
                 android:textColorHint="@color/transparent"

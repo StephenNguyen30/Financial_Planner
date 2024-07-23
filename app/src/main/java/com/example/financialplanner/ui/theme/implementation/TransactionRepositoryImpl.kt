@@ -18,7 +18,7 @@ class TransactionRepositoryImpl @Inject constructor(): TransactionRepository {
             CategoryModel("Pets", R.drawable.ic_pets, true),
             CategoryModel("Health care", R.drawable.ic_health_care, true),
             CategoryModel("Household", R.drawable.ic_household,true),
-            CategoryModel("Add Categories", 0 , false)
+            CategoryModel("Add Categories", R.drawable.ic_plus , true)
         )
     }
 

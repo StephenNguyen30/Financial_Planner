@@ -2,6 +2,7 @@ package com.example.financialplanner.ui.theme
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
@@ -21,7 +22,11 @@ import com.example.financialplanner.ui.theme.base.hideKeyboard
 import com.example.financialplanner.ui.theme.base.setTextEditView
 import com.example.financialplanner.ui.theme.base.titleCase
 import com.example.financialplanner.ui.theme.model.CategoryModel
+import com.example.financialplanner.ui.theme.model.TransactionModel
+import com.example.financialplanner.ui.theme.viewmodel.HomeViewModel
 import com.example.financialplanner.ui.theme.viewmodel.TransactionViewModel
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.YearMonth
@@ -34,19 +39,24 @@ import java.util.TimeZone
 @AndroidEntryPoint
 class TransactionsFragment :
     BaseFragment<TransactionsFragmentBinding>(TransactionsFragmentBinding::inflate) {
-    override val viewModel: TransactionViewModel by activityViewModels()
+
+    override val viewModel: TransactionViewModel by viewModels()
+    private val parentVM: HomeViewModel by activityViewModels()
 
     private val timeZone = TimeZone.getDefault()
     private val sdf = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
     private val cal = Calendar.getInstance(timeZone, Locale.ENGLISH)
-    private var formatters: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+    private var formatters: DateTimeFormatter =
+        DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH)
 
     private var originalList = emptyList<CategoryModel>()
+
 
     private val transactionAdapter: CategoryAdapter by lazy {
         CategoryAdapter(
             categoryOnClick = {
                 if (binding.etCategory.isFocused && it.name != "Add Categories") {
+                    viewModel.selectedCategory = it
                     val drawable = ContextCompat.getDrawable(requireContext(), it.icon)
                     binding.etCategory.setCompoundDrawablesWithIntrinsicBounds(
                         drawable,
@@ -62,7 +72,8 @@ class TransactionsFragment :
                     bindingPopUp(false)
                 }
                 if (it.name == "Add Categories" || it.name == "Add Accounts") {
-                    findNavController().navigate(R.id.action_transactionFragment_to_addCategoryFragment)
+                    this.getFragmentNavController(R.id.fragmentContainer)
+                        ?.navigate(R.id.action_transactionFragment_to_addCategoryFragment)
                 }
             },
         )
@@ -92,10 +103,10 @@ class TransactionsFragment :
 
     @SuppressLint("SetTextI18n")
     private fun initObserver() {
-        viewModel.categories.observe(viewLifecycleOwner) {
+        parentVM.categories.observe(viewLifecycleOwner) {
             if (it.isEmpty()) return@observe
             originalList = it
-            viewModel.getTransCategory()
+            parentVM.getTransCategory()
             if (binding.etCategory.isFocused && binding.rbExpenses.isChecked)
                 transactionAdapter.submitList(it)
         }
@@ -216,9 +227,33 @@ class TransactionsFragment :
             clearData()
         }
         binding.tvSave.setOnClickListener {
+            if (binding.rbExpenses.isChecked) {
+                val icon = viewModel.selectedCategory?.icon ?: 0
+                val addTransaction = TransactionModel(
+                    dayDate = binding.etDate.text.toString(),
+                    categories = CategoryModel(binding.etCategory.text.toString(), icon, true),
+                    amount = binding.etAmount.text.toString(),
+                    accounts = CategoryModel(binding.etAccount.text.toString(), 0, false),
+                    note = binding.etNote.text.toString(),
+                    isExpenses = true
+                )
+                viewModel.addTransaction(viewModel.userId, addTransaction)
+                findNavController().popBackStack()
+            } else if (binding.rbIncome.isChecked) {
+                val icon = viewModel.selectedCategory?.icon ?: 0
+                val addTransaction = TransactionModel(
+                    dayDate = binding.etDate.text.toString(),
+                    categories = CategoryModel(binding.etCategory.text.toString(), icon, true),
+                    amount = binding.etAmount.text.toString(),
+                    accounts = CategoryModel(binding.etAccount.text.toString(), 0, false),
+                    note = binding.etNote.text.toString(),
+                    isExpenses = false
+                )
+                viewModel.addTransaction(viewModel.userId, addTransaction)
+                findNavController().popBackStack()
+            }
 
         }
-
     }
 
     fun initCategoryRcv() {

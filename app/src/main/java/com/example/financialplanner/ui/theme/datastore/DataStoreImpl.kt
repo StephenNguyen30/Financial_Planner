@@ -18,7 +18,6 @@ class DataStoreImpl @Inject constructor(
 ) : DataStorePreference {
     private val gson = Gson()
 
-    //writing data
     override suspend fun saveUser(userModel: UserModel) {
         val userModelJson = gson.toJson(userModel)
         try {
@@ -28,20 +27,9 @@ class DataStoreImpl @Inject constructor(
         } catch (e: Exception) {
             Log.e("Exception", "$e")
         }
-
     }
 
-    //reading data
     override suspend fun getUser(): Flow<UserModel> {
-//        val userFlow: Flow<UserModel> = flow {
-//            if()
-//            dataStore.data.collect { preference ->
-//                val user = preference[USER_MODEL_KEY] ?: ""
-//                val decode = gson.fromJson(user, UserModel::class.java)
-//                emit(decode)
-//            }
-//        }
-//        return userFlow
         return flow {
             dataStore.data.collect { preference ->
                 val userJson = preference[USER_MODEL_KEY]
@@ -55,7 +43,6 @@ class DataStoreImpl @Inject constructor(
         }
     }
 
-    //delete existing user
     override suspend fun deleteUser(userModel: UserModel) {
         dataStore.edit { preference ->
             preference.clear()
