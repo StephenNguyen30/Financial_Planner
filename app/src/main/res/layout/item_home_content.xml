@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemContent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/d_4dp"
+    android:layout_marginBottom="@dimen/d_20dp"
+    android:background="@drawable/bg_btn_radius_light_orange_8"
+    android:paddingBottom="@dimen/d_10dp">
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/d_16dp"
+        android:paddingVertical="@dimen/d_10dp"
+        android:textSize="@dimen/s_14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="27 Jul 2024" />
+
+    <TextView
+        android:id="@+id/tvLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/tvDate" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/d_16dp"
+        android:layout_marginTop="@dimen/d_10dp"
+        app:layout_constraintStart_toStartOf="@id/tvLine"
+        app:layout_constraintTop_toBottomOf="@id/tvLine"
+        tools:src="@drawable/ic_food" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/d_10dp"
+        android:textSize="@dimen/s_12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ivIcon"
+        app:layout_constraintStart_toEndOf="@+id/ivIcon"
+        app:layout_constraintTop_toTopOf="@+id/ivIcon"
+        tools:text="Food" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/d_4dp"
+        android:paddingBottom="@dimen/d_10dp"
+        android:textSize="@dimen/s_10sp"
+        app:layout_constraintStart_toStartOf="@id/ivIcon"
+        app:layout_constraintTop_toBottomOf="@id/ivIcon"
+        tools:text="Bank" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/d_16dp"
+        android:textSize="@dimen/s_12sp"
+        app:layout_constraintBottom_toTopOf="@id/tvAccount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivIcon"
+        tools:text="1000000000 đ" />
+
+    <TextView
+        android:id="@+id/tvLine1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/tvAccount" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvNoteTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/d_16dp"
+        android:layout_marginTop="@dimen/d_10dp"
+        android:text="@string/note_with_dot"
+        android:textSize="@dimen/s_12sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/tvLine1"
+        app:layout_constraintTop_toBottomOf="@id/tvLine1" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvNote"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/d_16dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvNoteTitle"
+        app:layout_constraintTop_toTopOf="@id/tvNoteTitle"
+        tools:text="Hi I'm Thang" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

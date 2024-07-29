@@ -26,6 +26,7 @@ import javax.inject.Inject
 class TransactionViewModel @Inject constructor(
     private val getTransAccountUseCase: GetTransAccountUseCase,
     private val getTransIncomeCategory: GetTransIncomeCategoryUseCase,
+    private val getTransCategoriesUseCase: GetTransCategoriesUseCase,
     private val firebase: FirebaseRepository,
     private val dataStore: DataStorePreference
 ) : BaseViewModel() {
@@ -42,9 +43,14 @@ class TransactionViewModel @Inject constructor(
     private val _incomeCategories = MutableLiveData<List<CategoryModel>>()
     val incomeCategories = _incomeCategories.asLiveData()
 
+    private val _categories = MutableLiveData<List<CategoryModel>>()
+    val categories = _categories.asLiveData()
+
     var userId: String = ""
 
     var selectedCategory: CategoryModel? = null
+
+    var originalList = emptyList<CategoryModel>()
 
 
     init {
@@ -53,12 +59,20 @@ class TransactionViewModel @Inject constructor(
                 userId = it.id
             }
         }
+        getTransCategory()
         getTransAccount()
         getIncomeCategory()
     }
 
     private fun updateCalendar() {
         getTransCalendar(_yearMonth.value!!)
+    }
+
+    fun getTransCategory() {
+        viewModelScope.launch {
+            val category = getTransCategoriesUseCase.invoke()
+            _categories.value = category
+        }
     }
 
     fun getTransCalendar(yearMonth: YearMonth) {

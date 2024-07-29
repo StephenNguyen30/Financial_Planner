@@ -29,13 +29,13 @@
             android:layout_width="@dimen/d_130dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/radio_selector"
+            android:background="@drawable/radio_selector_1"
             android:button="@color/transparent"
             android:checked="true"
             android:gravity="center"
             android:paddingVertical="@dimen/d_8dp"
             android:text="@string/income"
-            android:textColor="@drawable/radio_color_selector" />
+            android:textColor="@drawable/radio_color_selector_1" />
 
         <RadioButton
             android:id="@+id/rbExpenses"
@@ -43,13 +43,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/d_8dp"
             android:layout_weight="1"
-            android:background="@drawable/radio_selector_1"
+            android:background="@drawable/radio_selector"
             android:button="@color/transparent"
             android:checked="false"
             android:gravity="center"
             android:paddingVertical="@dimen/d_8dp"
             android:text="@string/expenses"
-            android:textColor="@drawable/radio_color_selector_1" />
+            android:textColor="@drawable/radio_color_selector" />
 
         <RadioButton
             android:id="@+id/rbTransfer"
@@ -227,7 +227,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="450dp"
                 android:layout_marginTop="@dimen/d_10dp"
-                android:background="@color/light_grey"
+                android:background="@color/transparent"
                 android:clickable="false"
                 android:textSize="@dimen/s_16sp"
                 app:layout_constraintTop_toBottomOf="@+id/etNote"

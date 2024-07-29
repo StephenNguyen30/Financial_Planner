@@ -24,6 +24,7 @@ class DataStoreImpl @Inject constructor(
             dataStore.edit { preference ->
                 preference[USER_MODEL_KEY] = userModelJson
             }
+            Log.d("DataStore", "User saved successfully: $userModelJson")
         } catch (e: Exception) {
             Log.e("Exception", "$e")
         }

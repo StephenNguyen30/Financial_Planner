@@ -1,14 +1,18 @@
-package com.example.financialplanner.ui.theme
+package com.example.financialplanner.ui.theme.view
 
 
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.financialplanner.R
 import com.example.financialplanner.databinding.HomeFragmentBinding
 import com.example.financialplanner.databinding.ItemCategoryBinding
+import com.example.financialplanner.ui.theme.HomeActivity
+import com.example.financialplanner.ui.theme.adapter.PageAdapter
 import com.example.financialplanner.ui.theme.base.BaseFragment
+import com.example.financialplanner.ui.theme.model.TransactionModel
 import com.example.financialplanner.ui.theme.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -24,6 +28,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(HomeFragmentBinding::infl
     private val sdf = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
     private val cal = Calendar.getInstance(timeZone, Locale.ENGLISH)
 
+    private lateinit var viewPagerAdapter: PageAdapter
 
     override fun onFragmentCreated(savedInstanceState: Bundle?) {
         initListener()
@@ -49,8 +54,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(HomeFragmentBinding::infl
         binding.tvIncome.text = "Income"
         binding.tvExpenses.text = "Expenses"
         binding.tvTotal.text = "Total"
-
-
+        initViewPager()
     }
 
     private fun initListener() {
@@ -65,6 +69,13 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(HomeFragmentBinding::infl
         binding.ivAddTransactions.setOnClickListener {
             this.getFragmentNavController(R.id.fragmentContainer)?.navigate(R.id.action_homeFragment_to_transactionFragment)
         }
+    }
+
+    private fun initViewPager(){
+        binding.vpContent.adapter = PageAdapter(this)
+        binding.vpContent.setCurrentItem(Int.MAX_VALUE/2, false)
+
+
     }
 
 }

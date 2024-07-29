@@ -1,5 +1,8 @@
 package com.example.financialplanner.ui.theme.base
 
+import java.security.MessageDigest
+import java.util.Base64
+
 
 fun String.formatAmount(): String {
     if (this.isEmpty()) return ""
@@ -26,3 +29,20 @@ fun String.emptyString(): String {
 
 fun String.titleCase(): String =
     this.lowercase().replaceFirstChar { it.uppercase() }
+
+fun String.shortenId(): String {
+    return try {
+        // SHA-256 hash of id
+        val digest = MessageDigest.getInstance("SHA-256")
+        val hashBytes = digest.digest(this.toByteArray())
+
+        //encode to Base64
+        val base64Hash = Base64.getUrlEncoder().withoutPadding().encodeToString(hashBytes)
+
+        //short version of base64 string
+        base64Hash.take(16)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        this
+    }
+}

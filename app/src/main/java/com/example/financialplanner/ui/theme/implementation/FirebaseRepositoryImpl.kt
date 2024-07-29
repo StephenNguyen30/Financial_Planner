@@ -1,7 +1,6 @@
 package com.example.financialplanner.ui.theme.implementation
 
 import android.util.Log
-import androidx.datastore.dataStore
 import com.example.financialplanner.ui.theme.datastore.DataStorePreference
 import com.example.financialplanner.ui.theme.model.CategoryModel
 import com.example.financialplanner.ui.theme.model.TransactionModel
@@ -12,65 +11,51 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.getValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class FirebaseRepositoryImpl @Inject constructor(
-    database: FirebaseDatabase,
-    private val dataStore : DataStorePreference
+    firebase: FirebaseDatabase,
+    private val dataStore: DataStorePreference
 ) : FirebaseRepository {
-    private val userReference: DatabaseReference = database.getReference("users")
-    private val repositoryScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val userReference: DatabaseReference = firebase.getReference("users")
+    private val repositoryScope = CoroutineScope(Dispatchers.IO)
+    private var transactions: List<TransactionModel> = mutableListOf()
 
-    override suspend fun addUser(user: UserModel) =
+    override suspend fun addUser(user: UserModel): UserModel {
+        val userId =
+            userReference.push().key ?: ""
+        user.id = userId
+        var updatedUser = UserModel()
         suspendCancellableCoroutine { continuation ->
-            userReference.orderByChild("email").equalTo(user.email)
-                .addListenerForSingleValueEvent(/* listener = */ object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if (snapshot.exists()) {
-                            Log.d("Firebase", "User with email ${user.email} already exists")
-                            continuation.resume(Unit)
-                        } else {
-                            val userId = userReference.push().key
-                            if (userId != null) {
-                                user.id = userId
-                                repositoryScope.launch {
-                                    dataStore.saveUser(user)
-                                }
-                                userReference.child(userId).setValue(user)
-                                    .addOnSuccessListener {
-                                        userReference.child(userId).child("transactions")
-                                            .setValue(null)
-                                        Log.d("Firebase", "User added successfully")
-                                        continuation.resume(Unit)
-
-                                    }
-                                    .addOnFailureListener { e ->
-                                        Log.e("Firebase", "Error adding user", e)
-                                        continuation.resumeWithException(e)
-                                    }
-                            } else {
-                                continuation.resumeWithException(Exception("Failed to generate user ID"))
-                            }
-                        }
+            userReference.child(userId).setValue(user)
+                .addOnSuccessListener {
+                    Log.d("Firebase", "User added successfully")
+                    updatedUser = user.copy(id = userId)
+                    repositoryScope.launch {
+                        dataStore.saveUser(updatedUser)
                     }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        Log.e("Firebase", "Error checking email", error.toException())
-                        continuation.resumeWithException(error.toException())
-                    }
-
-                })
+                    continuation.resume(Unit)
+                }
+                .addOnFailureListener { e ->
+                    Log.e("Firebase", "Error adding user", e)
+                    continuation.resumeWithException(e)
+                }
         }
+        return updatedUser
+    }
+
 
     override suspend fun addTransaction(userId: String, transaction: TransactionModel) =
         suspendCancellableCoroutine { continuation ->
@@ -128,7 +113,7 @@ class FirebaseRepositoryImpl @Inject constructor(
             val listener = object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val user = dataSnapshot.getValue(UserModel::class.java)
-                    trySend(user)
+                    trySend(user).isSuccess
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -154,13 +139,67 @@ class FirebaseRepositoryImpl @Inject constructor(
 
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.w("Firebase", "Error getting transactions", databaseError.toException())
+                close(databaseError.toException())
             }
         }
-
-        userReference.child(userId).child("transactions").addValueEventListener(listener)
+        val transactionRef = userReference.child(userId).child("transactions")
+        Log.d("Firebase ref", "$transactionRef")
+        transactionRef.addValueEventListener(listener)
 
         awaitClose {
             userReference.child(userId).child("transactions").removeEventListener(listener)
         }
     }
+
+
+    override suspend fun getUserByEmail(email: String): UserModel? =
+        suspendCancellableCoroutine { continuation ->
+            userReference.orderByChild("email").equalTo(email)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (snapshot.exists()) {
+                            for (userSnapshot in snapshot.children) {
+                                val user = userSnapshot.getValue(UserModel::class.java)
+                                continuation.resume(user)
+                                return
+                            }
+                        } else {
+                            continuation.resume(null)
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.e("Firebase", "Error fetching user by email", error.toException())
+                        continuation.resumeWithException(error.toException())
+                    }
+                })
+        }
+
+    override suspend fun updateUser(email: String, userIdNew: String) {
+        //todo not done yet
+    }
+
+    override suspend fun getTransactionByDate(userId: String, monthYear: String) = callbackFlow {
+        val listener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val transactions = dataSnapshot.children.mapNotNull { childSnapshot ->
+                    childSnapshot.getValue(TransactionModel::class.java)
+                }
+                trySend(transactions)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.w("Firebase", "Error getting transactions", databaseError.toException())
+            }
+        }
+
+        userReference.child(userId).child("transactions").addValueEventListener(listener)
+        Log.d("Firebase", "userId: ${userReference.child(userId)}")
+
+        awaitClose {
+            userReference.child(userId).child("transactions").removeEventListener(listener)
+        }
+
+    }
+
 }

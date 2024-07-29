@@ -45,14 +45,15 @@
         android:layout_marginTop="@dimen/d_8dp"
         app:layout_constraintTop_toBottomOf="@id/tvMonth"
         app:tabIndicatorColor="@color/orange"
-        app:tabTextColor="@color/black"/>
+        app:tabTextColor="@color/black" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clIncomeAndExpense"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="@dimen/d_8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tlFilter">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -89,48 +90,48 @@
             android:id="@+id/tvTotalValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/_0"
             app:layout_constraintEnd_toEndOf="@id/tvTotal"
             app:layout_constraintStart_toStartOf="@id/tvTotal"
-            app:layout_constraintTop_toBottomOf="@id/tvTotal"
-            tools:text="0" />
+            app:layout_constraintTop_toBottomOf="@id/tvTotal" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvExpensesValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/_0"
+            android:textColor="@color/orange_FC8800"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvExpenses"
-            tools:text="0"
-            android:textColor="@color/green"/>
+            app:layout_constraintTop_toBottomOf="@id/tvExpenses" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvIncomeValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/_0"
+            android:textColor="@color/green"
             app:layout_constraintEnd_toEndOf="@id/tvIncome"
             app:layout_constraintStart_toStartOf="@id/tvIncome"
-            app:layout_constraintTop_toBottomOf="@id/tvIncome"
-            tools:text="0"
-            android:textColor="@color/red"/>
-
+            app:layout_constraintTop_toBottomOf="@id/tvIncome" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vpContent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/d_20dp"
             android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvExpensesValue" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivAddTransactions"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="@dimen/d_16dp"
-        android:layout_marginBottom="@dimen/d_16dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="@dimen/d_20dp"
+        android:layout_marginBottom="@dimen/d_20dp"
         android:src="@drawable/add_11018578"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

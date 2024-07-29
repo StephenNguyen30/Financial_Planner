@@ -29,11 +29,28 @@ class LoginActivity : BaseActivity<LoginFragmentBinding>(LoginFragmentBinding::i
 
     override val viewModel: AuthViewModel by viewModels()
 
+    private val loginPreference: LoginPreference by lazy {
+        LoginPreference(this)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        lifecycleScope.launch {
+            loginPreference.isLoggedIn.collect { isLoggedIn ->
+                if (isLoggedIn) {
+                    navigateToHome()
+                }
+            }
+        }
+
         initUI()
         initObserver()
         initListener()
+    }
+
+    private fun navigateToHome() {
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun initUI() {
@@ -44,10 +61,11 @@ class LoginActivity : BaseActivity<LoginFragmentBinding>(LoginFragmentBinding::i
 
     private fun initObserver() {
         viewModel.userLiveData.observe(this) {
-            if (it.id.isNotEmpty()) {
-                val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                startActivity(intent)
-                finish()
+            if (it?.id?.isNotEmpty() == true) {
+                lifecycleScope.launch {
+                    loginPreference.setLoginState(true)
+                    navigateToHome()
+                }
             }
             Log.d("KKK retrieve data", "$it")
         }

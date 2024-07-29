@@ -1,4 +1,4 @@
-package com.example.financialplanner.ui.theme
+package com.example.financialplanner.ui.theme.view
 
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.financialplanner.R
 import com.example.financialplanner.databinding.AddCategoryFragmentBinding
+import com.example.financialplanner.ui.theme.HomeActivity
 import com.example.financialplanner.ui.theme.base.BaseFragment
 import com.example.financialplanner.ui.theme.base.BaseViewModel
 import com.example.financialplanner.ui.theme.model.CategoryModel
