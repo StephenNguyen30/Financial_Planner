@@ -14,13 +14,17 @@ class PageAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
     override fun createFragment(position: Int): Fragment {
         val homeContentFragment  = HomeContentFragment()
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.MONTH, position - (Int.MAX_VALUE /2))
-        val monthYear = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH).format(calendar.time)
-
+        val monthYear = calculateMonthYear(position)
         homeContentFragment.arguments = Bundle().apply {
             putString("monthYear", monthYear)
         }
         return homeContentFragment
+    }
+    private fun calculateMonthYear(position: Int): String {
+        val baseCalendar = Calendar.getInstance().apply {
+            add(Calendar.MONTH, position - Int.MAX_VALUE / 2)
+        }
+        val sdf = SimpleDateFormat("MMM yyyy", Locale.ENGLISH)
+        return sdf.format(baseCalendar.time)
     }
 }

@@ -31,7 +31,7 @@ class FirebaseRepositoryImpl @Inject constructor(
 ) : FirebaseRepository {
     private val userReference: DatabaseReference = firebase.getReference("users")
     private val repositoryScope = CoroutineScope(Dispatchers.IO)
-    private var transactions: List<TransactionModel> = mutableListOf()
+    private var currentListener : ValueEventListener? = null
 
     override suspend fun addUser(user: UserModel): UserModel {
         val userId =
@@ -129,6 +129,7 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
 
     override suspend fun getTransactionsById(userId: String) = callbackFlow {
+        currentListener?.let { userReference.child(userId).child("transactions").removeEventListener(it) }
         val listener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val transactions = dataSnapshot.children.mapNotNull { childSnapshot ->
@@ -145,7 +146,6 @@ class FirebaseRepositoryImpl @Inject constructor(
         val transactionRef = userReference.child(userId).child("transactions")
         Log.d("Firebase ref", "$transactionRef")
         transactionRef.addValueEventListener(listener)
-
         awaitClose {
             userReference.child(userId).child("transactions").removeEventListener(listener)
         }
@@ -183,7 +183,9 @@ class FirebaseRepositoryImpl @Inject constructor(
         val listener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val transactions = dataSnapshot.children.mapNotNull { childSnapshot ->
-                    childSnapshot.getValue(TransactionModel::class.java)
+                    val transaction = childSnapshot.getValue(TransactionModel::class.java)
+                    if(transaction?.dayDate?.endsWith(monthYear) == true) transaction
+                    else null
                 }
                 trySend(transactions)
             }
@@ -193,11 +195,12 @@ class FirebaseRepositoryImpl @Inject constructor(
             }
         }
 
-        userReference.child(userId).child("transactions").addValueEventListener(listener)
-        Log.d("Firebase", "userId: ${userReference.child(userId)}")
+        val userTransactionRef = userReference.child(userId).child("transactions")
+
+        userTransactionRef.addValueEventListener(listener)
 
         awaitClose {
-            userReference.child(userId).child("transactions").removeEventListener(listener)
+            userTransactionRef.removeEventListener(listener)
         }
 
     }

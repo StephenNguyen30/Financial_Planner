@@ -110,4 +110,5 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.1")
     implementation("com.google.code.gson:gson:2.9.0")
 
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.12")
 }
