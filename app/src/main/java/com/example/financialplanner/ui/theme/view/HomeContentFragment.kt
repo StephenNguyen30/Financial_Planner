@@ -18,7 +18,11 @@ class HomeContentFragment : BaseFragment<ItemPagerBinding>(ItemPagerBinding::inf
     private var monthYear: String = ""
 
     private val adapter: HomeContentAdapter by lazy {
-        HomeContentAdapter()
+        HomeContentAdapter(
+            positionOnClick = {
+                binding.recyclerView.smoothScrollToPosition(it)
+            }
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

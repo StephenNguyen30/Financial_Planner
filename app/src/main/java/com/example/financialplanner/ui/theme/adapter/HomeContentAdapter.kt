@@ -7,11 +7,13 @@ import com.example.financialplanner.ui.theme.base.adapter.BaseBindingViewHolder
 import com.example.financialplanner.ui.theme.model.TransactionModel
 import com.example.financialplanner.ui.theme.viewholder.HomeContentViewHolder
 
-class HomeContentAdapter: BaseBindingAdapter<TransactionModel>(TransactionModel.DIFF_CALLBACK) {
+class HomeContentAdapter(
+    private val positionOnClick: (Int) -> Unit = {}
+) : BaseBindingAdapter<TransactionModel>(TransactionModel.DIFF_CALLBACK) {
     override fun contentViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): BaseBindingViewHolder<TransactionModel, out ViewBinding> {
-        return HomeContentViewHolder(parent)
+        return HomeContentViewHolder(parent, positionOnClick)
     }
 }
