@@ -1,18 +1,13 @@
 package com.example.financialplanner.ui.theme.view
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.financialplanner.databinding.ItemPagerBinding
-import com.example.financialplanner.ui.theme.HomeActivity
-import com.example.financialplanner.ui.theme.SELECTED_DATE
 import com.example.financialplanner.ui.theme.adapter.HomeContentAdapter
 import com.example.financialplanner.ui.theme.base.BaseFragment
 import com.example.financialplanner.ui.theme.base.BaseViewModel
-import com.example.financialplanner.ui.theme.model.TransactionModel
 import com.example.financialplanner.ui.theme.viewmodel.HomeViewModel
 
 class HomeContentFragment : BaseFragment<ItemPagerBinding>(ItemPagerBinding::inflate) {
@@ -25,7 +20,6 @@ class HomeContentFragment : BaseFragment<ItemPagerBinding>(ItemPagerBinding::inf
     private val adapter: HomeContentAdapter by lazy {
         HomeContentAdapter()
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

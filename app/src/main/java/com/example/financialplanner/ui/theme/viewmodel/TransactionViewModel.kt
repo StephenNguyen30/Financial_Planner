@@ -9,16 +9,13 @@ import com.example.financialplanner.ui.theme.datastore.DataStorePreference
 import com.example.financialplanner.ui.theme.model.CalendarModel
 import com.example.financialplanner.ui.theme.model.CategoryModel
 import com.example.financialplanner.ui.theme.model.TransactionModel
-import com.example.financialplanner.ui.theme.model.UserModel
 import com.example.financialplanner.ui.theme.respository.FirebaseRepository
 import com.example.financialplanner.ui.theme.usecases.GetTransAccountUseCase
 import com.example.financialplanner.ui.theme.usecases.GetTransCategoriesUseCase
 import com.example.financialplanner.ui.theme.usecases.GetTransIncomeCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.Year
 import java.time.YearMonth
 import javax.inject.Inject
 
