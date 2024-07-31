@@ -13,15 +13,22 @@
         android:supportsRtl="true"
         tools:targetApi="34">
         <activity
-            android:name=".ui.theme.HomeActivity"
+            android:name=".ui.theme.login.LoginActivity"
             android:exported="true"
-            android:label="@string/title_activity_login"
+            android:label="LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.theme.HomeActivity"
+            android:exported="true"
+            android:label="HomeActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
         </activity>
 
         <meta-data

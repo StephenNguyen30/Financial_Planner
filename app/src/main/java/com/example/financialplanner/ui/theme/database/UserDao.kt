@@ -1,4 +1,4 @@
-package com.example.financialplanner.ui.theme.room
+package com.example.financialplanner.ui.theme.database
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.financialplanner.ui.theme.entity.UserEntity
-import com.example.financialplanner.ui.theme.model.UserModel
 import kotlinx.coroutines.flow.Flow
 
 

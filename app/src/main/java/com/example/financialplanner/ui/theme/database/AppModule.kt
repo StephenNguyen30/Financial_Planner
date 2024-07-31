@@ -1,7 +1,11 @@
-package com.example.financialplanner.ui.theme.room
+package com.example.financialplanner.ui.theme.database
 
 import android.content.Context
 import androidx.room.Room
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,5 +26,11 @@ object AppModule {
     @Provides
     fun provideUserDao(database: AppRoomDatabase): UserDao {
         return database.userDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseDatabase(): FirebaseDatabase {
+        return Firebase.database
     }
 }

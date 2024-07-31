@@ -11,17 +11,34 @@ import java.util.Date
 
 @Parcelize
 data class TransactionModel(
-    val dayDate: Date,
-    val category: CategoryModel,
-    val income: Long = 0,
-    val expenses: Long = 0,
-    val note: String = ""
-) : Parcelable
+    val type : String,
+    val dayDate: String,
+    val categories: CategoryModel = CategoryModel(),
+    val amount: String,
+    val accounts: CategoryModel = CategoryModel(),
+    val note: String = "",
+) : Parcelable {
+    constructor() : this ("", "", CategoryModel(), "", CategoryModel(), "")
+
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TransactionModel>() {
+            override fun areItemsTheSame(oldItem: TransactionModel, newItem: TransactionModel) =
+                oldItem == newItem
+
+            override fun areContentsTheSame(
+                oldItem: TransactionModel,
+                newItem: TransactionModel,
+            ) =
+                oldItem == newItem
+        }
+    }
+}
 
 @Parcelize
 data class CategoryModel(
-    val name: String,
-    val icon: Int,
+    val name: String = "",
+    val icon: Int = 0,
+    val isCategory: Boolean = false
 ) : Parcelable{
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CategoryModel>() {

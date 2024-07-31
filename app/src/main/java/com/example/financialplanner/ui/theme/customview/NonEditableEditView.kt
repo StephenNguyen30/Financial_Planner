@@ -6,7 +6,7 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.findFragment
-import com.example.financialplanner.ui.theme.TransactionsFragment
+import com.example.financialplanner.ui.theme.view.TransactionsFragment
 import com.example.financialplanner.ui.theme.base.setTextAmount
 
 class NonEditableEditView(context: Context, attrs: AttributeSet) :

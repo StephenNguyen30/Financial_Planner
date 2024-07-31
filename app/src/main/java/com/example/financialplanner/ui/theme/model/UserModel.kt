@@ -1,12 +1,16 @@
 package com.example.financialplanner.ui.theme.model
 
+import android.os.Parcelable
+import com.google.firebase.database.Exclude
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class UserModel(
-    val id: String,
-    val displayName: String? = null,
-    val imageUrl: String? = null,
-    val phoneNumber: String? = null,
-    val firstName: String? = null,
-    val lastName: String? = null,
-    val email: String? = null
-)
+    var id: String = "",
+    val imageUrl: String? = "",
+    val phoneNumber: String? = "",
+    val firstName: String? = "",
+    val lastName: String? = "",
+    val email: String = "",
+    val token: String = ""
+): Parcelable

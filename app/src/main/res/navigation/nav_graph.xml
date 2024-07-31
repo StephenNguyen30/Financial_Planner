@@ -5,7 +5,7 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.financialplanner.ui.theme.HomeFragment"
+        android:name="com.example.financialplanner.ui.theme.view.HomeFragment"
         android:label="HomeFragment">
         <action
             android:id="@+id/action_homeFragment_to_transactionFragment"
@@ -17,19 +17,33 @@
     </fragment>
     <fragment
         android:id="@+id/transactionFragment"
-        android:name="com.example.financialplanner.ui.theme.TransactionsFragment"
+        android:name="com.example.financialplanner.ui.theme.view.TransactionsFragment"
         android:label="TransactionFragment">
+        <action
+            android:id="@+id/action_transactionFragment_to_addCategoryFragment"
+            app:destination="@+id/addCategoryFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right"/>
 
     </fragment>
     <fragment
+        android:id="@+id/addCategoryFragment"
+        android:name="com.example.financialplanner.ui.theme.view.AddCategoryFragment"
+        android:label="AddCategoryFragment">
+
+    </fragment>
+
+    <fragment
         android:id="@+id/statsFragment"
-        android:name="com.example.financialplanner.ui.theme.StatsFragment"
+        android:name="com.example.financialplanner.ui.theme.view.StatsFragment"
         android:label="StatsFragment">
 
     </fragment>
     <fragment
         android:id="@+id/accountFragment"
-        android:name="com.example.financialplanner.ui.theme.AccountFragment"
+        android:name="com.example.financialplanner.ui.theme.view.AccountFragment"
         android:label="AccountFragment">
 
     </fragment>

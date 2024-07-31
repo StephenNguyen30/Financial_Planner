@@ -1,7 +1,7 @@
 package com.example.financialplanner.ui.theme.implementation
 
 
-import com.example.financialplanner.ui.theme.room.UserDao
+import com.example.financialplanner.ui.theme.database.UserDao
 import com.example.financialplanner.ui.theme.mapper.mapToUserEntity
 import com.example.financialplanner.ui.theme.mapper.mapToUserModel
 import com.example.financialplanner.ui.theme.model.UserModel

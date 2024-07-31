@@ -29,25 +29,45 @@ class LoginActivity : BaseActivity<LoginFragmentBinding>(LoginFragmentBinding::i
 
     override val viewModel: AuthViewModel by viewModels()
 
+    private val loginPreference: LoginPreference by lazy {
+        LoginPreference(this)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        lifecycleScope.launch {
+            loginPreference.isLoggedIn.collect { isLoggedIn ->
+                if (isLoggedIn) {
+                    navigateToHome()
+                }
+            }
+        }
+
         initUI()
         initObserver()
         initListener()
     }
 
-    private fun initUI(){
+    private fun navigateToHome() {
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun initUI() {
         binding.tvNameApp.text = getString(R.string.app_login_name)
         binding.tvNoAccount.text = getString(R.string.do_not_have_account)
         binding.tvSignUpOnClick.text = getString(R.string.sign_up)
     }
 
     private fun initObserver() {
-        viewModel.userLiveData.observe(this){
-            val isNotEmpty = it.id.isNotEmpty()
-            if(isNotEmpty){
-                val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                startActivity(intent)
+        viewModel.userLiveData.observe(this) {
+            if (it?.id?.isNotEmpty() == true) {
+                lifecycleScope.launch {
+                    loginPreference.setLoginState(true)
+                    navigateToHome()
+                }
             }
+            Log.d("KKK retrieve data", "$it")
         }
     }
 
@@ -72,9 +92,9 @@ class LoginActivity : BaseActivity<LoginFragmentBinding>(LoginFragmentBinding::i
         lifecycleScope.launch {
             try {
                 val result = credentialManager.getCredential(
-                        request = request,
-                        context = this@LoginActivity,
-                    )
+                    request = request,
+                    context = this@LoginActivity,
+                )
 
                 Log.d(TAG, "KKK result $request")
                 viewModel.handleSignIn(result)

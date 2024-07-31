@@ -23,5 +23,7 @@
     <color name="blue_22294A">#22294A</color>
     <color name="gray_16181E">#16181E</color>
     <color name="green">#90EE90</color>
+    <color name="light_grey">#F6F6F6</color>
+    <color name="light_orange">#ffd7b9</color>
 
 </resources>

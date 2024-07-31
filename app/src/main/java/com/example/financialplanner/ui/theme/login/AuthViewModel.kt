@@ -1,46 +1,36 @@
 package com.example.financialplanner.ui.theme.login
 
-import android.app.Application
-import android.credentials.CredentialManager
+
 import android.util.Log
-import android.widget.Toast
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialResponse
-import androidx.datastore.dataStore
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.financialplanner.ui.theme.base.BaseViewModel
 import com.example.financialplanner.ui.theme.base.asLiveData
-import com.example.financialplanner.ui.theme.datastore.DataStoreImpl
+import com.example.financialplanner.ui.theme.base.shortenId
 import com.example.financialplanner.ui.theme.datastore.DataStorePreference
-import com.example.financialplanner.ui.theme.datastore.PreferenceKeys
-import com.example.financialplanner.ui.theme.mapper.mapToUserEntity
-import com.example.financialplanner.ui.theme.mapper.mapToUserModel
 import com.example.financialplanner.ui.theme.model.UserModel
-import com.example.financialplanner.ui.theme.respository.UserRepository
-import com.example.financialplanner.ui.theme.usecases.GetUserInfoUseCase
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.example.financialplanner.ui.theme.respository.FirebaseRepository
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.internal.Contexts.getApplication
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val dataStore: DataStorePreference
+    private val firebase: FirebaseRepository,
+    private val dataStore: DataStorePreference,
 ) : BaseViewModel() {
 
-    private val _userLiveData = MutableLiveData<UserModel>()
+    private val _userLiveData = MutableLiveData<UserModel?>()
     val userLiveData = _userLiveData.asLiveData()
 
-    fun handleSignIn(result: GetCredentialResponse){
+
+    fun handleSignIn(result: GetCredentialResponse) {
         viewModelScope.launch {
             when (val credential = result.credential) {
                 is CustomCredential -> {
@@ -48,19 +38,18 @@ class AuthViewModel @Inject constructor(
                         try {
                             val googleIdTokenCredential = GoogleIdTokenCredential
                                 .createFrom(credential.data)
+
                             val userModel = UserModel(
-                                id = googleIdTokenCredential.idToken,
-                                displayName = googleIdTokenCredential.displayName,
+                                token = googleIdTokenCredential.idToken.shortenId(),
                                 imageUrl = googleIdTokenCredential.profilePictureUri.toString(),
                                 phoneNumber = googleIdTokenCredential.phoneNumber,
                                 firstName = googleIdTokenCredential.givenName,
                                 lastName = googleIdTokenCredential.familyName,
-                                email = googleIdTokenCredential.id
+                                email = googleIdTokenCredential.id,
                             )
-                            _userLiveData.value = userModel
                             try {
-                                dataStore.saveUser(userModel)
-                            }catch (e: Exception){
+                                verifyUser(userModel)
+                            } catch (e: Exception) {
                                 Log.d("Exception", "Unable to save login credentials bundle")
                             }
 
@@ -71,6 +60,7 @@ class AuthViewModel @Inject constructor(
                         }
                     }
                 }
+
                 else -> {
                     // Catch any unrecognized credential type here.
                     Log.e("Exception", "Unexpected type of credential")
@@ -78,6 +68,28 @@ class AuthViewModel @Inject constructor(
             }
         }
 
+    }
+
+    private fun verifyUser(user: UserModel) {
+        viewModelScope.launch {
+            try {
+                var userModel = firebase.getUserByEmail(user.email)
+                Log.d("Firebase", "$userModel")
+                if (userModel != null) {
+                    Log.d("Firebase", "User exist in firebase: ${user.email}")
+                    if (user.token != userModel.token) {
+                        Log.d("Firebase", "Ids are different: ${user.token} & ${userModel.token}")
+                        //todo update token and add to datastore
+                    }
+                    dataStore.saveUser(userModel)
+                } else {
+                    userModel = firebase.addUser(user)
+                }
+                _userLiveData.value = userModel
+            } catch (e: Exception) {
+                Log.e("Exception", "Unable to save user")
+            }
+        }
     }
 }
 

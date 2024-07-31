@@ -8,4 +8,5 @@ import dagger.Provides
 interface TransactionRepository {
     suspend fun getTransCategories(): List<CategoryModel>
     suspend fun getTransAccount(): List<CategoryModel>
+    suspend fun getTransIncomeCategories(): List<CategoryModel>
 }

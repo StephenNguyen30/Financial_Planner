@@ -1,4 +1,4 @@
-package com.example.financialplanner.ui.theme.room
+package com.example.financialplanner.ui.theme.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
