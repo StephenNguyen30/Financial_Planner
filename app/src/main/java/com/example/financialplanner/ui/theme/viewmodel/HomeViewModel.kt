@@ -38,7 +38,13 @@ class HomeViewModel @Inject constructor(
     private val sdf = SimpleDateFormat("MMM yyyy", Locale.ENGLISH)
     private val cal = Calendar.getInstance(timeZone, Locale.ENGLISH)
 
-    var currentPage = 0
+    var currentPage = Int.MAX_VALUE / 2
+
+    var monthYear: String = ""
+
+    var income: Long = 0
+    var expenses: Long = 0
+    var total: Long = 0
 
     init {
         viewModelScope.launch {
@@ -78,7 +84,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getMonthOffset(monthYear: String, offset: Int): String {
+    private fun getMonthOffset(monthYear: String, offset: Int): String {
         cal.time = sdf.parse(monthYear)!!
         cal.add(Calendar.MONTH, offset)
         return sdf.format(cal.time)

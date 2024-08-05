@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/d_16dp"
         android:paddingVertical="@dimen/d_10dp"
-        android:textSize="@dimen/s_14sp"
+        android:textSize="@dimen/s_16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="27 Jul 2024" />
@@ -76,7 +76,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/white"
-        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/tvAccount" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -87,7 +86,6 @@
         android:layout_marginTop="@dimen/d_10dp"
         android:text="@string/note_with_dot"
         android:textSize="@dimen/s_12sp"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@id/tvLine1"
         app:layout_constraintTop_toBottomOf="@id/tvLine1" />
 
@@ -97,7 +95,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/d_16dp"
-        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tvNoteTitle"
         app:layout_constraintTop_toTopOf="@id/tvNoteTitle"

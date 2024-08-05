@@ -45,7 +45,8 @@ class HomeContentFragment : BaseFragment<ItemPagerBinding>(ItemPagerBinding::inf
     private fun initObserver() {
         parentVM.listTransactionByDate.observe(viewLifecycleOwner) { transactionMap ->
             val transactions = transactionMap[monthYear] ?: emptyList()
-            adapter.submitList(transactions)
+            val sorted = transactions.sortedByDescending { it.dayDate }
+            adapter.submitList(sorted)
         }
     }
 }

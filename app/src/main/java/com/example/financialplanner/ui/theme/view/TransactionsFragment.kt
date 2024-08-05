@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,6 +24,7 @@ import com.example.financialplanner.ui.theme.base.setTextEditView
 import com.example.financialplanner.ui.theme.base.titleCase
 import com.example.financialplanner.ui.theme.model.CategoryModel
 import com.example.financialplanner.ui.theme.model.TransactionModel
+import com.example.financialplanner.ui.theme.viewmodel.HomeViewModel
 import com.example.financialplanner.ui.theme.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -38,6 +40,7 @@ class TransactionsFragment :
     BaseFragment<TransactionsFragmentBinding>(TransactionsFragmentBinding::inflate) {
 
     override val viewModel: TransactionViewModel by viewModels()
+    private val parentVM: HomeViewModel by activityViewModels()
 
     private val timeZone = TimeZone.getDefault()
     private val sdf = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
@@ -45,6 +48,7 @@ class TransactionsFragment :
     private var formatters: DateTimeFormatter =
         DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH)
 
+    private var addTransaction = TransactionModel()
 
     private val transactionAdapter: CategoryAdapter by lazy {
         CategoryAdapter(
@@ -235,7 +239,7 @@ class TransactionsFragment :
             } else {
                 if (binding.rbExpenses.isChecked) {
                     val icon = viewModel.selectedCategory?.icon ?: 0
-                    val addTransaction = TransactionModel(
+                    addTransaction = TransactionModel(
                         type = "expenses",
                         dayDate = binding.etDate.text.toString(),
                         categories = CategoryModel(binding.etCategory.text.toString(), icon, true),
@@ -243,10 +247,9 @@ class TransactionsFragment :
                         accounts = CategoryModel(binding.etAccount.text.toString(), 0, false),
                         note = binding.etNote.text.toString(),
                     )
-                    viewModel.addTransaction(viewModel.userId, addTransaction)
                 } else if (binding.rbIncome.isChecked) {
                     val icon = viewModel.selectedCategory?.icon ?: 0
-                    val addTransaction = TransactionModel(
+                    addTransaction = TransactionModel(
                         type = "income",
                         dayDate = binding.etDate.text.toString(),
                         categories = CategoryModel(binding.etCategory.text.toString(), icon, true),
@@ -254,8 +257,8 @@ class TransactionsFragment :
                         accounts = CategoryModel(binding.etAccount.text.toString(), 0, false),
                         note = binding.etNote.text.toString(),
                     )
-                    viewModel.addTransaction(viewModel.userId, addTransaction)
                 }
+                viewModel.addTransaction(viewModel.userId, addTransaction)
                 findNavController().popBackStack()
             }
         }
