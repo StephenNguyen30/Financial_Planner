@@ -22,6 +22,21 @@
         tools:text="27 Jul 2024" />
 
     <TextView
+        android:id="@+id/tvDateByWeek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/tvDate"
+        app:layout_constraintTop_toTopOf="@id/tvDate"
+        app:layout_constraintBottom_toBottomOf="@id/tvDate"
+        tools:text="Hi"
+        android:layout_marginStart="@dimen/d_10dp"
+        android:textSize="@dimen/s_10sp"
+        android:textColor="@color/white"
+        android:background="@drawable/bg_btn_radius_6_dark_grey"
+        android:paddingVertical="@dimen/d_1dp"
+        android:paddingHorizontal="@dimen/d_4dp"/>
+
+    <TextView
         android:id="@+id/tvLine"
         android:layout_width="match_parent"
         android:layout_height="1dp"

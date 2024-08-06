@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemContent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/d_4dp"
+    android:layout_marginBottom="@dimen/d_20dp"
+    android:background="@drawable/bg_btn_radius_light_orange_8"
+    android:paddingBottom="@dimen/d_10dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/d_16dp"
+        android:paddingVertical="@dimen/d_10dp"
+        android:textSize="@dimen/s_16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="27 Jul 2024" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/tvDate" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvStartDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/d_16dp"
+        android:layout_marginTop="@dimen/d_15dp"
+        android:textSize="@dimen/s_12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvLine"
+        tools:text="01/08" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvLineForDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/line"
+        android:textSize="@dimen/s_20sp"
+        app:layout_constraintStart_toStartOf="@id/tvStartDate"
+        app:layout_constraintTop_toBottomOf="@id/tvStartDate" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvEndDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/d_6dp"
+        android:textSize="@dimen/s_12sp"
+        app:layout_constraintBottom_toBottomOf="@id/tvLineForDate"
+        app:layout_constraintStart_toEndOf="@id/tvLineForDate"
+        app:layout_constraintTop_toTopOf="@id/tvLineForDate"
+        tools:text="31/08" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvExpenses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/d_16dp"
+        android:textSize="@dimen/s_12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvLine"
+        tools:text="1000000000 đ" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvIncome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/d_16dp"
+        android:textSize="@dimen/s_12sp"
+        app:layout_constraintEnd_toStartOf="@id/tvExpenses"
+        app:layout_constraintTop_toTopOf="@id/tvExpenses"
+        app:layout_constraintBottom_toBottomOf="@id/tvExpenses"
+        tools:text="1000000000 đ" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

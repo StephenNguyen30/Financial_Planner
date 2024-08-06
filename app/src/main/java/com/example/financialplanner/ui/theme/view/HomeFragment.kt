@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
@@ -18,7 +19,6 @@ import com.example.financialplanner.ui.theme.adapter.PageAdapter
 import com.example.financialplanner.ui.theme.base.BaseFragment
 import com.example.financialplanner.ui.theme.base.BaseViewModel
 import com.example.financialplanner.ui.theme.base.formatAmount
-import com.example.financialplanner.ui.theme.base.lengthOfLong
 import com.example.financialplanner.ui.theme.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -34,13 +34,14 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(HomeFragmentBinding::infl
     private val timeZone = TimeZone.getDefault()
     private val sdf = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
     private val sdf1 = SimpleDateFormat("MMM yyyy", Locale.ENGLISH)
+    private val sdf2 = SimpleDateFormat("yyyy", Locale.ENGLISH)
     private val cal = Calendar.getInstance(timeZone, Locale.ENGLISH)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val callBack = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                parentVM.currentPage = Int.MAX_VALUE/2
+                parentVM.currentPage = Int.MAX_VALUE / 2
                 resetViewPager()
                 isEnabled = false
                 requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -59,14 +60,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(HomeFragmentBinding::infl
 
     @SuppressLint("SetTextI18n")
     private fun initUi() {
+        binding.tvMonth.text = sdf.format(cal.time)
         //setting UI to home screen!!!!!
         (activity as HomeActivity).let {
             it.showTopAppBar(true, getString(R.string.transactions))
             it.showBottomNavigation(true)
         }
-
-        binding.tvMonth.text = parentVM.monthYear
-        Log.d("Viewpager", "initUi: ${parentVM.monthYear}")
         val list = listOf("Daily", "Monthly", "Annually")
         val tabLayout = binding.tlFilter
         for (i in list.indices) {
@@ -83,11 +82,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(HomeFragmentBinding::infl
     private fun initListener() {
         binding.ivLeftArrow.setOnClickListener {
             binding.vpContent.setCurrentItem(parentVM.currentPage - 1, true)
-            Log.d("Firebase", "currentTime: ${sdf1.format(cal.time)}")
         }
         binding.ivRightArrow.setOnClickListener {
             binding.vpContent.setCurrentItem(parentVM.currentPage + 1, true)
-            Log.d("Firebase", "currentTime: ${sdf1.format(cal.time)}")
         }
         binding.ivAddTransactions.setOnClickListener {
             this.getFragmentNavController(R.id.fragmentContainer)
@@ -118,14 +115,16 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(HomeFragmentBinding::infl
 
     private fun initViewPager() {
         val adapter = PageAdapter(this)
+
         binding.vpContent.adapter = adapter
-        binding.vpContent.currentItem = parentVM.currentPage
+        binding.vpContent.setCurrentItem(parentVM.currentPage, false)
         binding.vpContent.offscreenPageLimit = ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
     }
 
     private fun initObserver() {
         parentVM.listTransactionByDate.observe(viewLifecycleOwner) { transactionMap ->
-            Log.d("Firebase", "initObserver: $transactionMap")
+            if(transactionMap.isEmpty()) return@observe
+            Log.d("Transaction", "${R.drawable.ic_transport}")
             parentVM.income = 0
             parentVM.expenses = 0
             parentVM.total = 0
@@ -146,5 +145,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(HomeFragmentBinding::infl
     fun resetViewPager() {
         binding.vpContent.setCurrentItem(parentVM.currentPage, true)
     }
+
 
 }

@@ -1,5 +1,6 @@
 package com.example.financialplanner.ui.theme.implementation
 
+import android.util.Log
 import com.example.financialplanner.R
 import com.example.financialplanner.ui.theme.model.CategoryModel
 import com.example.financialplanner.ui.theme.respository.TransactionRepository

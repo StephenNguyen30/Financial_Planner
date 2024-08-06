@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:shape="rectangle"
     tools:ignore="MissingDefaultResource">
-    <corners android:topRightRadius="@dimen/d_30dp"
-        android:topLeftRadius="@dimen/d_30dp"
+    <corners android:topRightRadius="@dimen/d_25dp"
+        android:topLeftRadius="@dimen/d_25dp"
         android:bottomLeftRadius="@dimen/d_0_0dp"
         android:bottomRightRadius="@dimen/d_0_0dp"/>
     <solid android:color="@color/light_grey" />

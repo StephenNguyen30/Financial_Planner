@@ -20,10 +20,8 @@ import com.bumptech.glide.request.transition.Transition
 import com.example.financialplanner.R
 import com.example.financialplanner.databinding.HomeActivityBinding
 import com.example.financialplanner.ui.theme.base.BaseActivity
-import com.example.financialplanner.ui.theme.view.HomeFragment
 import com.example.financialplanner.ui.theme.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale

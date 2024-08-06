@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -24,7 +23,6 @@ import com.example.financialplanner.ui.theme.base.setTextEditView
 import com.example.financialplanner.ui.theme.base.titleCase
 import com.example.financialplanner.ui.theme.model.CategoryModel
 import com.example.financialplanner.ui.theme.model.TransactionModel
-import com.example.financialplanner.ui.theme.viewmodel.HomeViewModel
 import com.example.financialplanner.ui.theme.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -40,7 +38,6 @@ class TransactionsFragment :
     BaseFragment<TransactionsFragmentBinding>(TransactionsFragmentBinding::inflate) {
 
     override val viewModel: TransactionViewModel by viewModels()
-    private val parentVM: HomeViewModel by activityViewModels()
 
     private val timeZone = TimeZone.getDefault()
     private val sdf = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)

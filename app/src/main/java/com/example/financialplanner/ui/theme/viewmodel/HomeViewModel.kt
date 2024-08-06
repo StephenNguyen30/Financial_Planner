@@ -1,11 +1,13 @@
 package com.example.financialplanner.ui.theme.viewmodel
 
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.financialplanner.ui.theme.base.BaseViewModel
 import com.example.financialplanner.ui.theme.base.asLiveData
 import com.example.financialplanner.ui.theme.datastore.DataStorePreference
+import com.example.financialplanner.ui.theme.model.MonthlyTransactionModel
 import com.example.financialplanner.ui.theme.model.TransactionModel
 import com.example.financialplanner.ui.theme.model.UserModel
 import com.example.financialplanner.ui.theme.respository.FirebaseRepository
@@ -34,13 +36,16 @@ class HomeViewModel @Inject constructor(
     private val _listTransactionByDate = MutableLiveData<Map<String, List<TransactionModel>>>()
     val listTransactionByDate = _listTransactionByDate.asLiveData()
 
+    private val _monthlyTransaction = MutableLiveData<List<MonthlyTransactionModel>>()
+    val monthlyTransaction = _monthlyTransaction.asLiveData()
+
     private val timeZone = TimeZone.getDefault()
     private val sdf = SimpleDateFormat("MMM yyyy", Locale.ENGLISH)
     private val cal = Calendar.getInstance(timeZone, Locale.ENGLISH)
 
     var currentPage = Int.MAX_VALUE / 2
 
-    var monthYear: String = ""
+    var monthYear: String = sdf.format(cal.time)
 
     var income: Long = 0
     var expenses: Long = 0
@@ -61,6 +66,7 @@ class HomeViewModel @Inject constructor(
             val transactions = withContext(Dispatchers.IO) {
                 firebase.getTransactionByDate(userId, monthYear).first()
             }
+            Log.d("Firebase", "getTransactionsByDate: $transactions")
             _listTransactionByDate.value =
                 _listTransactionByDate.value.orEmpty().plus(monthYear to transactions)
         }

@@ -5,7 +5,7 @@ import androidx.viewbinding.ViewBinding
 import com.example.financialplanner.ui.theme.base.adapter.BaseBindingAdapter
 import com.example.financialplanner.ui.theme.base.adapter.BaseBindingViewHolder
 import com.example.financialplanner.ui.theme.model.TransactionModel
-import com.example.financialplanner.ui.theme.viewholder.HomeContentViewHolder
+import com.example.financialplanner.ui.theme.viewholder.HomeContentDailyViewHolder
 
 class HomeContentAdapter(
     private val positionOnClick: (Int) -> Unit = {}
@@ -14,6 +14,6 @@ class HomeContentAdapter(
         parent: ViewGroup,
         viewType: Int
     ): BaseBindingViewHolder<TransactionModel, out ViewBinding> {
-        return HomeContentViewHolder(parent, positionOnClick)
+        return HomeContentDailyViewHolder(parent, positionOnClick)
     }
 }

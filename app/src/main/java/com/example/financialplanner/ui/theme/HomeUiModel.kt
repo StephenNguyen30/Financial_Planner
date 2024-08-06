@@ -3,7 +3,9 @@ package com.example.financialplanner.ui.theme
 import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
 import com.example.financialplanner.ui.theme.model.CategoryModel
+import com.example.financialplanner.ui.theme.model.MonthlyTransactionModel
 import com.example.financialplanner.ui.theme.model.PlanModel
+import com.example.financialplanner.ui.theme.model.TransactionModel
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
@@ -11,6 +13,8 @@ import java.time.LocalDate
 data class HomeUiModel(
     val type: Int = -1,
     val plan: PlanModel?,
+    val transaction : List<TransactionModel>,
+    val monthlyTransactions: MonthlyTransactionModel,
     val date: LocalDate,
     val planType: List<PlanModel>?,
     val totalBudget: Long = 0,

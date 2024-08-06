@@ -1,13 +1,8 @@
 package com.example.financialplanner.ui.theme.model
 
-import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
-import com.example.financialplanner.ui.theme.HomeUiModel
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.RawValue
-import java.util.Calendar
-import java.util.Date
 
 @Parcelize
 data class TransactionModel(
@@ -48,6 +43,26 @@ data class CategoryModel(
             override fun areContentsTheSame(
                 oldItem: CategoryModel,
                 newItem: CategoryModel,
+            ) =
+                oldItem == newItem
+        }
+    }
+}
+
+@Parcelize
+data class MonthlyTransactionModel(
+    val month: String,
+    val income: Long,
+    val expenses: Long,
+) : Parcelable {
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MonthlyTransactionModel>() {
+            override fun areItemsTheSame(oldItem: MonthlyTransactionModel, newItem: MonthlyTransactionModel) =
+                oldItem == newItem
+
+            override fun areContentsTheSame(
+                oldItem: MonthlyTransactionModel,
+                newItem: MonthlyTransactionModel,
             ) =
                 oldItem == newItem
         }
