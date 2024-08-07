@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
@@ -34,14 +33,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(HomeFragmentBinding::infl
     private val timeZone = TimeZone.getDefault()
     private val sdf = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
     private val sdf1 = SimpleDateFormat("MMM yyyy", Locale.ENGLISH)
-    private val sdf2 = SimpleDateFormat("yyyy", Locale.ENGLISH)
     private val cal = Calendar.getInstance(timeZone, Locale.ENGLISH)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val callBack = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                parentVM.currentPage = Int.MAX_VALUE / 2
                 resetViewPager()
                 isEnabled = false
                 requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -52,10 +49,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(HomeFragmentBinding::infl
     }
 
     override fun onFragmentCreated(savedInstanceState: Bundle?) {
-        initListener()
         initUi()
-        initObserver()
         initViewPager()
+        initListener()
+        initObserver()
     }
 
     @SuppressLint("SetTextI18n")
@@ -124,7 +121,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(HomeFragmentBinding::infl
     private fun initObserver() {
         parentVM.listTransactionByDate.observe(viewLifecycleOwner) { transactionMap ->
             if(transactionMap.isEmpty()) return@observe
-            Log.d("Transaction", "${R.drawable.ic_transport}")
             parentVM.income = 0
             parentVM.expenses = 0
             parentVM.total = 0

@@ -101,7 +101,7 @@ class HomeActivity : BaseActivity<HomeActivityBinding>(HomeActivityBinding::infl
             when (it.itemId) {
                 R.id.navItemHome -> {
                     navController.navigate(R.id.homeFragment)
-                    viewModel.currentPage = Int.MAX_VALUE/2
+                    viewModel.currentPage = Int.MAX_VALUE / 2
                     true
                 }
 

@@ -14,16 +14,16 @@ class CategoryViewHolder(
 ) : BaseBindingViewHolder<CategoryModel, ItemTransactionInfoBinding>(parent get ItemTransactionInfoBinding::inflate) {
     override fun bind(data: CategoryModel) {
         binding.tvCategories.text = data.name
-        binding.ivIcon.setImageResource(data.icon)
         binding.root.setOnClickListener {
             categoryOnClick.invoke(data)
         }
         val view = binding.tvCategories
-        if (!data.isCategory) {
+        if (data.icon == 0) {
             view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 marginStart = itemView.context.resources.getDimensionPixelSize(R.dimen.d_0_0dp)
             }
         } else {
+            binding.ivIcon.setImageResource(data.icon)
             view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 marginStart = itemView.context.resources.getDimensionPixelSize(R.dimen.d_22dp)
             }

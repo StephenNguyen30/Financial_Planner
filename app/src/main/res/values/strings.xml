@@ -31,5 +31,25 @@
     <string name="_0">0</string>
     <string name="note_with_dot">Note :</string>
     <string name="line">-</string>
+    <string name="food">Food</string>
+    <string name="transport">Transport</string>
+    <string name="education">Education</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="social">Social</string>
+    <string name="gift">Gift</string>
+    <string name="clothing">Clothing</string>
+    <string name="pets">Pets</string>
+    <string name="health_care">Health Care</string>
+    <string name="household">Household</string>
+    <string name="cash">Cash</string>
+    <string name="card">Card</string>
+    <string name="bank">Bank</string>
+    <string name="add_categories">Add Categories</string>
+    <string name="salary">Salary</string>
+    <string name="petty_cash">Petty Cash</string>
+    <string name="interest">Interest</string>
+    <string name="investment">Investment</string>
+    <string name="bonus">Bonus</string>
+    <string name="allowance">Allowance</string>
 
 </resources>

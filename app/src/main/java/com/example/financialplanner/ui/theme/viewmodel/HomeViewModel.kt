@@ -1,18 +1,17 @@
 package com.example.financialplanner.ui.theme.viewmodel
 
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.financialplanner.ui.theme.base.BaseViewModel
 import com.example.financialplanner.ui.theme.base.asLiveData
 import com.example.financialplanner.ui.theme.datastore.DataStorePreference
-import com.example.financialplanner.ui.theme.model.MonthlyTransactionModel
 import com.example.financialplanner.ui.theme.model.TransactionModel
 import com.example.financialplanner.ui.theme.model.UserModel
 import com.example.financialplanner.ui.theme.respository.FirebaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -36,8 +35,8 @@ class HomeViewModel @Inject constructor(
     private val _listTransactionByDate = MutableLiveData<Map<String, List<TransactionModel>>>()
     val listTransactionByDate = _listTransactionByDate.asLiveData()
 
-    private val _monthlyTransaction = MutableLiveData<List<MonthlyTransactionModel>>()
-    val monthlyTransaction = _monthlyTransaction.asLiveData()
+//    private val _monthlyTransaction = MutableLiveData<List<MonthlyTransactionModel>>()
+//    val monthlyTransaction = _monthlyTransaction.asLiveData()
 
     private val timeZone = TimeZone.getDefault()
     private val sdf = SimpleDateFormat("MMM yyyy", Locale.ENGLISH)
@@ -62,13 +61,11 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getTransactionsByDate(userId: String, monthYear: String) {
-        viewModelScope.launch {
-            val transactions = withContext(Dispatchers.IO) {
-                firebase.getTransactionByDate(userId, monthYear).first()
+        viewModelScope.launch(Dispatchers.IO) {
+            firebase.getTransactionByDate(userId, monthYear).collectLatest {
+                val transactionsMap = mapOf(monthYear to it)
+                _listTransactionByDate.postValue(transactionsMap)
             }
-            Log.d("Firebase", "getTransactionsByDate: $transactions")
-            _listTransactionByDate.value =
-                _listTransactionByDate.value.orEmpty().plus(monthYear to transactions)
         }
     }
 

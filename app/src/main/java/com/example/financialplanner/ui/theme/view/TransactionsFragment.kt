@@ -2,6 +2,7 @@ package com.example.financialplanner.ui.theme.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -21,6 +22,7 @@ import com.example.financialplanner.ui.theme.base.GridItemDecoration
 import com.example.financialplanner.ui.theme.base.hideKeyboard
 import com.example.financialplanner.ui.theme.base.setTextEditView
 import com.example.financialplanner.ui.theme.base.titleCase
+import com.example.financialplanner.ui.theme.base.trimmer
 import com.example.financialplanner.ui.theme.model.CategoryModel
 import com.example.financialplanner.ui.theme.model.TransactionModel
 import com.example.financialplanner.ui.theme.viewmodel.TransactionViewModel
@@ -50,7 +52,7 @@ class TransactionsFragment :
     private val transactionAdapter: CategoryAdapter by lazy {
         CategoryAdapter(
             categoryOnClick = {
-                if (binding.etCategory.isFocused && it.name != "Add Categories") {
+                if (binding.etCategory.isFocused && it.isCategory) {
                     viewModel.selectedCategory = it
                     val drawable = ContextCompat.getDrawable(requireContext(), it.icon)
                     binding.etCategory.setCompoundDrawablesWithIntrinsicBounds(
@@ -62,11 +64,11 @@ class TransactionsFragment :
                     binding.etCategory.setTextEditView(" ${it.name}")
                     bindingPopUp(false)
                 }
-                if (binding.etAccount.isFocused && it.name != "Add Accounts") {
+                if (binding.etAccount.isFocused && it.isCategory) {
                     binding.etAccount.setTextEditView(" ${it.name}")
                     bindingPopUp(false)
                 }
-                if (it.name == "Add Categories" || it.name == "Add Accounts") {
+                if (!it.isCategory) {
                     this.getFragmentNavController(R.id.fragmentContainer)
                         ?.navigate(R.id.action_transactionFragment_to_addCategoryFragment)
                 }
@@ -239,9 +241,9 @@ class TransactionsFragment :
                     addTransaction = TransactionModel(
                         type = "expenses",
                         dayDate = binding.etDate.text.toString(),
-                        categories = CategoryModel(binding.etCategory.text.toString(), icon, true),
+                        categories = CategoryModel(binding.etCategory.text.toString().trimmer(), icon, true),
                         amount = binding.etAmount.text.toString(),
-                        accounts = CategoryModel(binding.etAccount.text.toString(), 0, false),
+                        accounts = CategoryModel(binding.etAccount.text.toString().trimmer(), 0, false),
                         note = binding.etNote.text.toString(),
                     )
                 } else if (binding.rbIncome.isChecked) {
@@ -249,13 +251,14 @@ class TransactionsFragment :
                     addTransaction = TransactionModel(
                         type = "income",
                         dayDate = binding.etDate.text.toString(),
-                        categories = CategoryModel(binding.etCategory.text.toString(), icon, true),
+                        categories = CategoryModel(binding.etCategory.text.toString().trimmer(), icon, true, ),
                         amount = binding.etAmount.text.toString(),
-                        accounts = CategoryModel(binding.etAccount.text.toString(), 0, false),
+                        accounts = CategoryModel(binding.etAccount.text.toString().trimmer(), 0, false),
                         note = binding.etNote.text.toString(),
                     )
                 }
                 viewModel.addTransaction(viewModel.userId, addTransaction)
+                Log.d("Firebase", binding.etCategory.text.toString().trimmer())
                 findNavController().popBackStack()
             }
         }

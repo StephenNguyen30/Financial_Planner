@@ -47,6 +47,6 @@ fun String.shortenId(): String {
     }
 }
 
-fun lengthOfLong(long: Long): Int {
-    return long.toString().length
+fun String.trimmer(): String{
+    return this.replace(" ", "")
 }
